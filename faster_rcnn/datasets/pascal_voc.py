@@ -24,7 +24,7 @@ class Pascal_VOC(Imdb):
                          'motorbike', 'person', 'pottedplant',
                          'sheep', 'sofa', 'train', 'tvmonitor')
         self._num_classes = len(self.classes)
-        self._class_to_ind = dict(zip(self.classes), range(self.num_classes))
+        self._class_to_ind = dict(zip(self.classes, range(self.num_classes)))
         self._image_index = self._load_image_set_index()
         self._image_ext = '.jpg'
 
