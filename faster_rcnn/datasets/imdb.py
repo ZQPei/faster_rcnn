@@ -1,4 +1,7 @@
+import os
+import os.path as osp
 
+from ..config import cfg
 class Imdb(object):
     """Image database."""
 
@@ -24,3 +27,10 @@ class Imdb(object):
     @property
     def image_index(self):
         return self._image_index
+
+    @property
+    def cache_path(self):
+        cache_path = osp.abspath(osp.join(cfg.DATA_DIR, 'cache'))
+        if not os.path.exists(cache_path):
+            os.makedirs(cache_path)
+        return cache_path
