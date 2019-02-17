@@ -1,7 +1,7 @@
 import os
 import os.path as osp
 import numpy as np
-import scipy
+import scipy.sparse
 import xml.etree.ElementTree as ET
 import pickle
 
