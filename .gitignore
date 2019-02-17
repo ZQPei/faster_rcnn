@@ -1,2 +1,5 @@
 *.pkl
+
+
 VOC*/
+__pycache__/
