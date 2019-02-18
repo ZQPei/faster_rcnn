@@ -44,6 +44,8 @@ def prepare_roidb(imdb):
         nonzero_inds = np.where(max_overlaps > 0)[0]
         assert all(max_classes[nonzero_inds] != 0)
 
+    return roidb
+
     # To get a better understanding of roidb prepared by this function
     # imdb.roidb[0]  --> pascal voc 2007 trainval set 000005.jpg
     # {'boxes': array([[262, 210, 323, 338],
