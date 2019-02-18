@@ -17,8 +17,8 @@ def get_minibatch(minibatch_db):
     blobs = {'data': im_blob}
     # gt boxes: (x1, y1, x2, y2, cls)
     gt_boxes = np.empty((roidb['num_objs'], 5), dtype=np.float32)
-    gt_boxes[0:4] = roidb['boxes']*im_scale
-    gt_boxes[4] = roidb['gt_classes']
+    gt_boxes[:, 0:4] = roidb['boxes']*im_scale
+    gt_boxes[:, 4] = roidb['gt_classes']
     blobs['gt_boxes'] = gt_boxes
 
     blobs['gt_ishard'] = roidb['gt_ishard']
