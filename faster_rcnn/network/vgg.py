@@ -40,8 +40,10 @@ class VGG(nn.Module):
 
     def forward(self, x):
         x = self.features(x)
-        x = x.view(x.size(0), -1)
-        x = self.classifier(x)
+        
+        # x = x.view(x.size(0), -1)
+        # x = self.classifier(x)
+        
         return x
 
     def _initialize_weights(self):
@@ -193,3 +195,12 @@ def vgg19_bn(pretrained=False, **kwargs):
     if pretrained:
         model.load_state_dict(model_zoo.load_url(model_urls['vgg19_bn']))
     return model
+
+
+if __name__ == "__main__":
+    import torch
+    resnet = resnet50()
+    resnet.cuda()
+    input = torch.randn((4,3,600,600)).cuda()
+    output = resnet(input)
+    print(output.shape)

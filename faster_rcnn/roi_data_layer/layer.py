@@ -32,12 +32,12 @@ class RoIDataLayer(object):
         return db_inds
 
     def _get_next_minibatch(self):
-        """Return the blobs to be used for the next minibatch."""
+        """Return the blob to be used for the next minibatch."""
         db_inds = self._get_next_minibatch_inds()
         minibatch_db = [self._roidb[i] for i in db_inds]
         return get_minibatch(minibatch_db)
 
     def forward(self):
-        """Get blobs and copy them into this layer's top blob vector."""
-        blobs = self._get_next_minibatch()
-        return blobs
+        """Get blob and copy them into this layer's top blob vector."""
+        blob = self._get_next_minibatch()
+        return blob
