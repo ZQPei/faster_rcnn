@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 
 
-class FasterRCNN(nn.Modules):
+class FasterRCNN(nn.Module):
     """Faster RCNN network
     """
 
