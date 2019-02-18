@@ -2,6 +2,7 @@
 import cv2
 import os
 
+import numpy as np
 from ..config import cfg
 
 def get_minibatch(minibatch_db):
