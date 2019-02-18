@@ -11,6 +11,7 @@ class Imdb(object):
         self._classes = []
         self._class_to_ind = {}
         self._image_index = []
+        self._num_images = 0
 
         self._roidb = None
         self._roidb_handler = None
@@ -44,6 +45,9 @@ class Imdb(object):
     @property
     def image_index(self):
         return self._image_index
+    @property
+    def num_images(self):
+        return self._num_images
 
     @property
     def cache_path(self):

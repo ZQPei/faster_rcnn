@@ -27,6 +27,7 @@ class Pascal_VOC(Imdb):
         self._class_to_ind = dict(zip(self.classes, range(self.num_classes)))
         # for pascal voc 2007 trainval, image_index = ['000005', '000007', ...]
         self._image_index = self._load_image_set_index()
+        self._num_images = len(self._image_index)
         self._image_ext = '.jpg'
 
         self._roidb_handler = self.gt_roidb
