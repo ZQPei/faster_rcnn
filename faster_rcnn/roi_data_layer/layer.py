@@ -8,7 +8,6 @@ import numpy as np
 from .minibatch import get_minibatch
 from ..config import cfg
 
-np.random.seed(cfg.SEED)
 
 class RoIDataLayer(object):
     """Fast R-CNN data layer used for training."""
