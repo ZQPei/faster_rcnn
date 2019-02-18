@@ -25,6 +25,8 @@ def get_minibatch(minibatch_db):
     blobs['im_info'] = np.array([im.shape[1], im.shape[2], im_scale], dtype=np.float32)
     blobs['im_name'] = os.path.basename(roidb['image'])
 
+    return blobs
+
 def preprocess(im, pixel_means, target_size, max_size):
     """Mean subtract and scale an image for use in a blob."""
     im = im.astype(np.float32, copy=False)
