@@ -11,6 +11,10 @@ cfg.SEED = 1024
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 
+# Dataset
+cfg.DATASET_NAME = 'Pascal_VOC'
+cfg.
+
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
 # We use the same pixel mean for all networks even though it's not exactly what
