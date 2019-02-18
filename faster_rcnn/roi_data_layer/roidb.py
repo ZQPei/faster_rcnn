@@ -1,4 +1,4 @@
-import PIL
+import PIL.Image
 import numpy as np
 
 def prepare_roidb(imdb):
