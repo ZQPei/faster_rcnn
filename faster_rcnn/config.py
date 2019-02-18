@@ -13,7 +13,6 @@ cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 
 # Dataset
 cfg.DATASET_NAME = 'Pascal_VOC'
-cfg.
 
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
