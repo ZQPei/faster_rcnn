@@ -12,6 +12,23 @@ class Imdb(object):
         self._class_to_ind = {}
         self._image_index = []
 
+        self._roidb = None
+        self._roidb_handler = None
+
+    @property
+    def roidb(self):
+        # A roidb is a list of dictionaries, each with the following keys:
+        #   boxes
+        #   num_objs
+        #   gt_overlaps
+        #   gt_classes
+        #   flipped
+        if self._roidb is None:
+            assert callable(self._roidb_handler), "define _roidb_handler"
+            return self._roidb_handler()
+
+        return self._roidb
+
     @property
     def name(self):
         return self._name

@@ -25,8 +25,11 @@ class Pascal_VOC(Imdb):
                          'sheep', 'sofa', 'train', 'tvmonitor')
         self._num_classes = len(self.classes)
         self._class_to_ind = dict(zip(self.classes, range(self.num_classes)))
+        # for pascal voc 2007 trainval, image_index = ['000005', '000007', ...]
         self._image_index = self._load_image_set_index()
         self._image_ext = '.jpg'
+
+        self._roidb_handler = self.gt_roidb
 
         assert os.path.exists(self._devkit_path), \
             'VOCdevkit path does not exist: {}'.format(self._devkit_path)
@@ -63,6 +66,12 @@ class Pascal_VOC(Imdb):
             'Path does not exist: {}'.format(image_path)
         return image_path
 
+    def image_path_at(self, i):
+        """
+        Return the absolute path to image i in the image sequence.
+        """
+        return self.image_path_from_index(self._image_index[i])
+
     def gt_roidb(self):
         """
         Return the database of ground-truth regions of interest.
@@ -76,11 +85,11 @@ class Pascal_VOC(Imdb):
             print("{} gt roidb loaded from {}".format(self.name, cache_file))
             return roidb
 
-        gt_roidb = [self._load_pascal_annotation(index) for index in self.image_index]
+        _gt_roidb = [self._load_pascal_annotation(index) for index in self.image_index]
         with open(cache_file, 'wb') as fid:
-            pickle.dump(gt_roidb, fid, pickle.HIGHEST_PROTOCOL)
+            pickle.dump(_gt_roidb, fid, pickle.HIGHEST_PROTOCOL)
         print("wrote gt roidb to {}".format(cache_file))
-        return gt_roidb
+        return _gt_roidb
 
     def _load_pascal_annotation(self, index):
         """
@@ -94,6 +103,7 @@ class Pascal_VOC(Imdb):
 
         boxes = np.zeros((num_objs, 4), dtype=np.uint16)
         gt_classes = np.zeros((num_objs), dtype=np.int32)
+        # overlaps has shape of num_objs x num_classes, num_objs is number of objects in one single image
         overlaps = np.zeros((num_objs, self.num_classes), dtype=np.float32)
         # "Seg" area for pascal is just the box area
         seg_areas = np.zeros((num_objs), dtype=np.float32)
@@ -115,17 +125,29 @@ class Pascal_VOC(Imdb):
             cls = self._class_to_ind[obj.find('name').text.lower().strip()]
             boxes[ix, :] = [x1, y1, x2, y2]
             gt_classes[ix] = cls
+            # overlaps's column of cls set to 1.0
             overlaps[ix, cls] = 1.0
             seg_areas[ix] = (x2 - x1 + 1) * (y2 - y1 + 1)
 
         overlaps = scipy.sparse.csr_matrix(overlaps)
 
         return {'boxes': boxes,
+                'num_objs': num_objs,
                 'gt_classes': gt_classes,
                 'gt_ishard': ishards,
                 'gt_overlaps': overlaps,
                 'flipped': False,
                 'seg_areas': seg_areas}
+
+        # To get a better understanding of gt_overlaps
+        # this is the gt_overlaps of the first image in pascal voc 2007 trainval set 000005.jpg
+        #     array([[0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        #            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        #            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        #            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.],
+        #            [0., 0., 0., 0., 0., 0., 0., 0., 0., 1., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.]], dtype=float32)
+
+
 
 
 if __name__ == "__main__":
