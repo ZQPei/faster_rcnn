@@ -26,7 +26,7 @@ class Imdb(object):
         #   flipped
         if self._roidb is None:
             assert callable(self._roidb_handler), "define _roidb_handler"
-            return self._roidb_handler()
+            self._roidb = self._roidb_handler()
 
         return self._roidb
 
