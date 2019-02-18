@@ -22,7 +22,7 @@ def get_minibatch(minibatch_db):
     blobs['gt_boxes'] = gt_boxes
 
     blobs['gt_ishard'] = roidb['gt_ishard']
-    blobs['im_info'] = np.array([im.shape[1], im.shape[2], im_scale], dtype=np.float32)
+    blobs['im_info'] = np.array([im_blob.shape[1], im_blob.shape[2], im_scale], dtype=np.float32)
     blobs['im_name'] = os.path.basename(roidb['image'])
 
     return blobs
