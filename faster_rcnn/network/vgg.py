@@ -199,8 +199,8 @@ def vgg19_bn(pretrained=False, **kwargs):
 
 if __name__ == "__main__":
     import torch
-    resnet = resnet50()
-    resnet.cuda()
+    net = vgg16_bn()
+    net.cuda()
     input = torch.randn((4,3,600,600)).cuda()
-    output = resnet(input)
+    output = net(input)
     print(output.shape)
