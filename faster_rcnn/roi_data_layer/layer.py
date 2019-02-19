@@ -41,3 +41,7 @@ class RoIDataLayer(object):
         """Get blob and copy them into this layer's top blob vector."""
         blob = self._get_next_minibatch()
         return blob
+
+    # To get a better understanding of roidb prepared by this function
+    
+

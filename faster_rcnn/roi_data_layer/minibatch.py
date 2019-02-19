@@ -28,15 +28,15 @@ def get_minibatch(minibatch_db):
     return blob
 
 def preprocess(im, pixel_means, target_size, max_size):
-    """Mean subtract and scale an image for use in a blob."""
+    """Scale an image for use in a blob."""
     im = im.astype(np.float32, copy=False)
-    im -= pixel_means
+    # im -= pixel_means
     im_height, im_width = im.shape[:2]
     im_size_max, im_size_min = (im_height, im_width) if im_height>im_width else (im_width, im_height)
     im_scale = float(target_size) / im_size_min
     # Pervent the biggest axis from being more than MAX_SIZE
     if np.round(im_scale*im_size_max) > max_size:
         im_scale = float(max_size) / im_size_max
-    im = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR)
-    im_data = np.expand_dims(im, axis=0)
+    im_data = cv2.resize(im, None, None, fx=im_scale, fy=im_scale, interpolation=cv2.INTER_LINEAR) 
+    # im_data = np.expand_dims(im_data, axis=0)
     return im_data, im_scale
