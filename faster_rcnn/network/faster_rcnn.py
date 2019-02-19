@@ -36,17 +36,20 @@ class RPN(nn.Module):
     """
     def __init__(self, in_channels, out_channels, sliding_window_size=3):
         super(RPN, self).__init__()
+
+        self.anchor_scales = cfg.NETWORK.ANCHOR_SCALES
+        self.anchor_ratios = cfg.NETWORK.ANCHOR_RATIOS
+
         self.conv = Conv2d(in_channels, out_channels, kernel_size=sliding_window_size, stride=1, same_padding=True)
         self.num_anchors = cfg.NETWORK.NUM_ANCHORS
         self.score_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
 
         # loss
-        # self.rpn_cls_loss
-        # self.rpn_box_loss
+        self.rpn_cls_loss = None
+        self.rpn_box_loss = None
         
-    @property
-    def loss(self):
+    def build_rpn_loss(self):
         return self.rpn_cls_loss + self.rpn_bbox_loss
 
     def forward(self, x):
@@ -90,18 +93,21 @@ class FasterRCNN(nn.Module):
 
         self.features = BasicNetwork()
         self.rpn = RPN(self.basic_network.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
-        self.rcnn_cls_conv = 
-        self.rcnn_box_conv = 
+        feature_stride = cfg.NETWORK.FEATURE_STRIDE # <== feature stride
+        roi_pooled_size = cfg.NETWORK.ROI_POOLED_SIZE
+        self.roipool_layer = RoIPool(roi_pooled_size, roi_pooled_size, 1./feature_stride)
+        self.rcnn_fc = nn.Sequential([
+            FC(cfg.NETWORK.RPN_CONV_OUTCHANNELS*roi_pooled_size*roi_pooled_size, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True),
+            FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True)
+        ])
+        self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes+1, relu=False)
+        self.rcnn_box_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, 4, relu=False)
 
         self.use_cuda = cfg.USE_CUDA
 
         # loss
-        self.rcnn_cls_loss
-        self.rcnn_box_loss
-
-    @property
-    def loss(self): 
-        pass
+        self.rcnn_cls_loss = None
+        self.rcnn_box_loss = None
 
     def preprocess(self, im_data):
         """
@@ -117,7 +123,7 @@ class FasterRCNN(nn.Module):
         return im_data
 
     def forward(self, im_blob):
-        """A im_blob is a dict contains these keys:
+        """A im_blob is a dict with these keys:
             im_data,
             gt_boxes,
             gt_ishard,
@@ -128,8 +134,23 @@ class FasterRCNN(nn.Module):
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map)
-        
+        # roi pooling
+        roi_pooled_features = self.roipool_layer(feature_map, rois)
+        x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
+        x = self.rcnn_fc(x)
+        rcnn_cls_score = self.rcnn_cls_fc(x)
+        rcnn_cls_prob  = F.softmax(rcnn_cls_score, dim=1)
+        rcnn_box_pred  = self.rcnn_box_fc(x)
 
+        if self.training:
+            self.rcnn_cls_loss, self.rcnn_box_loss = self.build_rcnn_loss(rcnn_cls_prob, rcnn_box_pred, im_blob['gt_boxes'])
+            pass
+
+        return rcnn_cls_prob, rcnn_box_pred, rois
+
+    @staticmethod
+    def build_rcnn_loss(rcnn_cls_prob, rcnn_box_pred, gt_boxes): 
+        pass
 
 
 

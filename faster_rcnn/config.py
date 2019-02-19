@@ -20,12 +20,15 @@ if not osp.exists(cfg.SAVE_MODEL_DIR):
     os.makedirs(cfg.SAVE_MODEL_DIR)
 
 # Dataset
-cfg.DATASET_NAME = 'Pascal_VOC'
-cfg.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
-                'bottle', 'bus', 'car', 'cat', 'chair',
-                'cow', 'diningtable', 'dog', 'horse',
-                'motorbike', 'person', 'pottedplant',
-                'sheep', 'sofa', 'train', 'tvmonitor')
+cfg.DATASET = EasyDict()
+
+cfg.DATASET.NAME = 'Pascal_VOC'
+# cfg.DATASET.NUM_CLASSES = 20
+# cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
+#                 'bottle', 'bus', 'car', 'cat', 'chair',
+#                 'cow', 'diningtable', 'dog', 'horse',
+#                 'motorbike', 'person', 'pottedplant',
+#                 'sheep', 'sofa', 'train', 'tvmonitor')
 
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
@@ -43,6 +46,7 @@ cfg.NETWORK = EasyDict()
 cfg.NETWORK.BASIC_NETWORK = "vgg16"
 cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS = 512
 cfg.NETWORK.RPN_CONV_OUTCHANNELS = 512
+cfg.NETWORK.RCNN_FC_OUTCHANNELS = 4096
 
 # Set anchor scales and ratios
 cfg.NETWORK.NUM_ANCHORS = 9
@@ -64,6 +68,9 @@ cfg.NETWORK.ANCHOR_RATIOS = [0.5, 1., 2.]
 #       [ -35.,  -79.,   52.,   96.],
 #       [ -79., -167.,   96.,  184.],
 #       [-167., -343.,  184.,  360.]])
+
+# RoI pooling layer config
+cfg.NETWORK.ROI_POOLED_SIZE = 7
 
 # During train ================================================================================
 cfg.TRAIN = EasyDict() 

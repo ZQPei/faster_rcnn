@@ -1,5 +1,6 @@
 *.pkl
 
 
+models/
 VOC*
 __pycache__/

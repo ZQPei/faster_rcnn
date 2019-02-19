@@ -10,13 +10,13 @@ from faster_rcnn.config import cfg
 np.random.seed(cfg.SEED)
 
 # data_layer
-if cfg.DATASET_NAME == 'Pascal_VOC':
+if cfg.DATASET.NAME == 'Pascal_VOC':
     imdb = Pascal_VOC("trainval", "2007")
 prepare_roidb(imdb)
 data_layer = RoIDataLayer(imdb.roidb)
 
 # network definition
-# net = FasterRCNN(imdb.num_classes)
+net = FasterRCNN(imdb.num_classes)
 
 
 from IPython import embed; embed()

@@ -27,7 +27,7 @@ class FC(nn.Module):
 
     def forward(self, x):
         x = self.fc(x)
-        if self.dropout is not None:
+        if self.training and self.dropout is not None:
             x = self.dropout(x)
         if self.relu is not None:
             x = self.relu(x)

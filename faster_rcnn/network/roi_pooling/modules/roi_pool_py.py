@@ -5,6 +5,11 @@ import numpy as np
 
 class RoIPool(nn.Module):
     def __init__(self, pooled_height, pooled_width, spatial_scale):
+        """spatial_scale is the ratio of the real rois divided by its feature map rois
+            e.g.
+                For a vgg16 conv net, if a roi is [0,0,160,160], the roi on feature map should be [0, 0, 10, 10]
+                In this case, spatial_scale is 16.
+        """
         super(RoIPool, self).__init__()
         self.pooled_width = int(pooled_width)
         self.pooled_height = int(pooled_height)
