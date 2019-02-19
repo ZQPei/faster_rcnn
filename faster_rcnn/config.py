@@ -17,7 +17,7 @@ cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
 if not osp.exists(cfg.SAVE_MODEL_DIR):
-    os.mkdir(cfg.SAVE_MODEL_DIR)
+    os.makedirs(cfg.SAVE_MODEL_DIR)
 
 # Dataset
 cfg.DATASET_NAME = 'Pascal_VOC'
