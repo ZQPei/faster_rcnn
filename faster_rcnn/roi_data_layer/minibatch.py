@@ -12,7 +12,7 @@ def get_minibatch(minibatch_db):
 
     roidb = minibatch_db[0]
     im = cv2.imread(roidb['image'])
-    im_data, im_scale = preprocess(im, cfg.PIXEL_MEANS, cfg.TRAIN.SCALE, cfg.TRAIN.MAX_SIZE)
+    im_data, im_scale = preprocess(im, cfg.TRAIN.SCALE, cfg.TRAIN.MAX_SIZE)
 
     blob = {'im_data': im_data}
     # gt boxes: (x1, y1, x2, y2, cls)
@@ -27,7 +27,7 @@ def get_minibatch(minibatch_db):
 
     return blob
 
-def preprocess(im, pixel_means, target_size, max_size):
+def preprocess(im, target_size, max_size):
     """Scale an image for use in a blob."""
     im = im.astype(np.float32, copy=False)
     # im -= pixel_means
