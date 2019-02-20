@@ -117,6 +117,9 @@ cfg.TEST.RPN_POST_NMS_TOP_N = 300
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
 cfg.TEST.PRN_MIN_SIZE = 16
 
+# Overlap threshold used for non-maximum suppression in RCNN in test phase
+cfg.TEST.RCNN_NMS_THRESH = 0.3
+
 
 if __name__ == "__main__":
     import ipdb; ipdb.set_trace()

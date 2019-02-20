@@ -4,8 +4,8 @@ import torch
 def bbox_transform_inv(boxes, deltas):
     """
     Input:
-        boxes shape: (N, 4)
-        deltas shape: (N, 4)
+        boxes shape: (N, 4) float32
+        deltas shape: (N, 4) float32
 
         pred_cx = cx + dx*w
         pred_cy = cy + dy*h

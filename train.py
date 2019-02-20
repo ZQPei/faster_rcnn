@@ -4,6 +4,7 @@ import torch
 from faster_rcnn.datasets.pascal_voc import Pascal_VOC
 from faster_rcnn.roi_data_layer.roidb import prepare_roidb
 from faster_rcnn.roi_data_layer.layer import RoIDataLayer
+from faster_rcnn.roi_data_layer.minibatch import preprocess
 
 from faster_rcnn.network.faster_rcnn import FasterRCNN
 
@@ -30,5 +31,13 @@ gt_boxes = inputs['gt_boxes']
 gt_ishard = inputs['gt_ishard']
 
 rcnn_cls_prob, rcnn_bbox_pred, rois = net(im_data, im_info, gt_boxes, gt_ishard)
+
+import cv2
+im = cv2.imread("img/test.jpg")
+im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
+im_data, im_scale_ratio = preprocess(im)
+im_info = np.array([*im_data.shape[:2], im_scale_ratio])
+net.eval()
+res = net.detect(im, im_info)
 
 from IPython import embed; embed()

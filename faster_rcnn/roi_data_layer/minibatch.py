@@ -28,7 +28,7 @@ def get_minibatch(minibatch_db):
 
     return blob
 
-def preprocess(im, target_size, max_size):
+def preprocess(im, target_size=600, max_size=1000):
     """Scale an image for use in a blob."""
     im = im.astype(np.float32, copy=False)
     # im -= pixel_means

@@ -9,6 +9,9 @@ from .vgg import vgg16_bn as vgg16
 from .resnet import resnet50
 
 from .proposal_layer import proposal_layer
+from .bbox_transform import bbox_transform_inv, clip_boxes
+from .nms import nms
+
 from .roi_pooling.modules.roi_pool_py import RoIPool as RoIPool_py
 from .roi_pooling.modules.roi_pool import RoIPool
 
@@ -55,7 +58,7 @@ class RPN(nn.Module):
         self.rpn_cls_loss = None
         self.rpn_box_loss = None
         
-    def forward(self, im_data, im_info, gt_boxes, gt_ishard):
+    def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
         x = self.conv(im_data)
         # rpn cls prob
         rpn_cls_score = self.cls_conv(x)
@@ -64,9 +67,8 @@ class RPN(nn.Module):
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
 
-        # proposal layer
+        # proposal layer to RCNN network as input
         rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
-        import ipdb; ipdb.set_trace()
 
         # generating training labels and build the rpn loss
         if self.training:
@@ -110,8 +112,8 @@ class FasterRCNN(nn.Module):
             FC(cfg.NETWORK.RPN_CONV_OUTCHANNELS*roi_pooled_size*roi_pooled_size, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True),
             FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True)
         )
-        self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)
-        self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, 4, relu=False)
+        self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)   # ==> 21
+        self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.n_classes * 4, relu=False)# ==> 21*4 = 84
 
         self.use_cuda = cfg.USE_CUDA
 
@@ -136,7 +138,7 @@ class FasterRCNN(nn.Module):
             im_data = im_data.cuda()
         return im_data
 
-    def forward(self, im_data, im_info, gt_boxes, gt_ishard):
+    def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
 
         feature_map = self.features(im_data)
@@ -164,8 +166,54 @@ class FasterRCNN(nn.Module):
         rcnn_cls_loss, rcnn_box_loss = None, None
         return rcnn_cls_loss, rcnn_box_loss
 
+    @staticmethod
+    def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, nms=True, clip=True, min_score=0.0):
+        """
+        Say N is the number of rois
+        rcnn_cls_prob  (N, 21)
+        rcnn_bbox_pred  (N, 84)
+        rois  (N, 4)
+        """
+        # filter bg cls and scores smaller than min_score
+        scores, cls_inds = rcnn_cls_prob.max(1)
+        mask = (cls_inds>0)*(scores>=min_score)
+        scores = scores[mask]
+        cls_inds = cls_inds[mask]
+        box_deltas = rcnn_bbox_pred[mask, :]
 
+        # do bbox transform
+        im_height, im_width, im_scale_ratio = im_info.data
+        boxes = rois[mask, :]/im_scale_ratio
+        box_deltas = torch.stack([
+            box_deltas[i, cls_inds[i]*4 : cls_inds[i]*4+4] for i in range(cls_inds.shape[0])
+        ], dim=0)
+        pred_boxes = bbox_transform_inv(boxes, box_deltas)
+        if clip:
+            pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
+
+        if nms and pred_boxes.shape[0]>0:
+            nms_mask = nms(torch.cat([pred_boxes, scores.view(-1,1)]), threshold=cfg.TEST.RCNN_NMS_THRESH)
+            pred_boxes = pred_boxes[nms_mask,:]
+            scores = scores[nms_mask]
+            cls_inds = cls_inds[nms_mask]
+
+        return pred_boxes, scores, cls_inds
 
     
-    def detect(self, x):
-        pass
+    def detect(self, im_data, im_info, score_thresh=0.3):
+        """
+        Input:
+            im_data: numpy.ndarray
+                    RGB
+                    scaled shorter side to 600
+        Return:
+            prob_boxes, scores, cls_inds
+        """
+        im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
+        rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
+        rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
+        prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score=score_thresh)
+        prob_boxes, scores, cls_inds = prob_boxes.numpy(), scores.numpy(), cls_inds.numpy()
+        return prob_boxes, scores, cls_inds
+
+        
