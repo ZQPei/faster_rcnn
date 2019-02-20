@@ -180,11 +180,13 @@ class FasterRCNN(nn.Module):
         scores = scores[mask]
         cls_inds = cls_inds[mask]
         box_deltas = rcnn_bbox_pred[mask, :]
-
-        import ipdb; ipdb.set_trace()
-        # do bbox transform
         im_height, im_width, im_scale_ratio = im_info.data
         boxes = rois[mask, :]/im_scale_ratio
+
+        import ipdb; ipdb.set_trace()
+        if cls_inds.shape[0]<0:
+            return boxes, scores, cls_inds
+        # do bbox transform
         box_deltas = torch.stack([
             box_deltas[i, cls_inds[i]*4 : cls_inds[i]*4+4] for i in range(cls_inds.shape[0])
         ], dim=0)
