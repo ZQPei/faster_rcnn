@@ -108,7 +108,6 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)
     # in slowest to fastest order
     bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous().view(-1, 4)
-    import ipdb; ipdb.set_trace()
 
     # Same story for the scores:
     #

@@ -66,6 +66,7 @@ class RPN(nn.Module):
 
         # proposal layer
         rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
+        import ipdb; ipdb.set_trace()
 
         # generating training labels and build the rpn loss
         if self.training:
