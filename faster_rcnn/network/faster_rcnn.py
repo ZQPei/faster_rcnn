@@ -181,6 +181,7 @@ class FasterRCNN(nn.Module):
         cls_inds = cls_inds[mask]
         box_deltas = rcnn_bbox_pred[mask, :]
 
+        import ipdb; ipdb.set_trace()
         # do bbox transform
         im_height, im_width, im_scale_ratio = im_info.data
         boxes = rois[mask, :]/im_scale_ratio
@@ -209,7 +210,6 @@ class FasterRCNN(nn.Module):
         Return:
             prob_boxes, scores, cls_inds
         """
-        import ipdb; ipdb.set_trace()
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
         rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
         prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score=score_thresh)
