@@ -2,6 +2,8 @@ import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 
+import numpy as np
+
 from .modules import *
 from .vgg import vgg16_bn as vgg16
 from .resnet import resnet50

@@ -17,6 +17,16 @@ data_layer = RoIDataLayer(imdb.roidb)
 
 # network definition
 net = FasterRCNN(imdb.num_classes)
+net.train()
+if cfg.USE_CUDA:
+    net.cuda()
 
+inputs = data_layer.forward()
+im_data = inputs['im_data']
+im_info = inputs['im_info']
+gt_boxes = inputs['gt_boxes']
+gt_ishard = inputs['gt_ishard']
+
+rcnn_cls_prob, rcnn_bbox_pred, rois = net(im_data, im_info, gt_boxes, gt_ishard)
 
 from IPython import embed; embed()
