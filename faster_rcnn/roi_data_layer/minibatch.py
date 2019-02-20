@@ -12,6 +12,7 @@ def get_minibatch(minibatch_db):
 
     roidb = minibatch_db[0]
     im = cv2.imread(roidb['image'])
+    im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im_data, im_scale = preprocess(im, cfg.TRAIN.SCALE, cfg.TRAIN.MAX_SIZE)
 
     blob = {'im_data': im_data}

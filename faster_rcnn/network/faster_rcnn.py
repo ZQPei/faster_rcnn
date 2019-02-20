@@ -42,21 +42,17 @@ class RPN(nn.Module):
 
         self.conv = Conv2d(in_channels, out_channels, kernel_size=sliding_window_size, stride=1, same_padding=True)
         self.num_anchors = cfg.NETWORK.NUM_ANCHORS
-        self.score_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
+        self.cls_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
 
         # loss
         self.rpn_cls_loss = None
         self.rpn_box_loss = None
         
-    def build_rpn_loss(self):
-        return self.rpn_cls_loss + self.rpn_bbox_loss
-
-    def forward(self, x):
-        x = self.conv(x)
-
-        # rpn score
-        rpn_cls_score = self.score_conv(x)
+    def forward(self, im_data, im_info, gt_boxes, gt_ishard):
+        x = self.conv(im_data)
+        # rpn cls prob
+        rpn_cls_score = self.cls_conv(x)
         rpn_cls_prob = self.rpn_score_to_prob_softmax(rpn_cls_score)
 
         # rpn boxes
@@ -65,11 +61,19 @@ class RPN(nn.Module):
         # proposal layer
         rois = self.rpn_get_proposal(rpn_cls_score, rpn_bbox_pred, im_info)
 
+        if self.training:
+            pass
+
         return rois
+
+    @staticmethod
+    def build_rpn_loss(rpn_cls_score, rpn_bbox_pred, ):
+        return rpn_cls_loss ,rpn_bbox_loss
 
     @staticmethod
     def rpn_score_to_prob_softmax(rpn_cls_score):
         b, c, h, w = rpn_cls_score.shape
+        d = 2
         rpn_cls_score = rpn_cls_score.resize(b, d, c//d, h, w)
         rpn_cls_prob = F.softmax(rpn_cls_score, dim=1)
         rpn_cls_prob = rpn_cls_prob.resize(b, c, h, w)
@@ -101,7 +105,7 @@ class FasterRCNN(nn.Module):
             FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True)
         ])
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes+1, relu=False)
-        self.rcnn_box_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, 4, relu=False)
+        self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, 4, relu=False)
 
         self.use_cuda = cfg.USE_CUDA
 
@@ -109,28 +113,25 @@ class FasterRCNN(nn.Module):
         self.rcnn_cls_loss = None
         self.rcnn_box_loss = None
 
-    def preprocess(self, im_data):
+    @staticmethod
+    def preprocess(im_data, transform=None, is_cuda=False):
         """
         Input:
-            im_data: HxWxC, numpy.ndarray, [0,255]
+            im_data: HxWxC, numpy.ndarray, [0,255], RGB color
         Return:
-            Normalized im_data
+            Normalized im_data: 1xCxHxW, torch.tensor
         """
         im_data = (im_data).astype(np.float32)/255
         im_data = torch.from_numpy(im_data).permute(2,0,1)
-        im_data = self._normalize(im_data)
+        if transform is not None:
+            im_data = transform(im_data)
         im_data = im_data.unsqueeze(0)
+        if is_cuda:
+            im_data = im_data.to()
         return im_data
 
-    def forward(self, im_blob):
-        """A im_blob is a dict with these keys:
-            im_data,
-            gt_boxes,
-            gt_ishard,
-            im_info,
-            im_name
-        """
-        im_data = self.preprocess(im_blob['im_data'], is_cuda=self.use_cuda)
+    def forward(self, im_data, im_info, gt_boxes, gt_ishard):
+        im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map)
@@ -138,19 +139,22 @@ class FasterRCNN(nn.Module):
         roi_pooled_features = self.roipool_layer(feature_map, rois)
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
         x = self.rcnn_fc(x)
+
+        # rcnn cls prob
         rcnn_cls_score = self.rcnn_cls_fc(x)
         rcnn_cls_prob  = F.softmax(rcnn_cls_score, dim=1)
-        rcnn_box_pred  = self.rcnn_box_fc(x)
+        # rcnn bboxes
+        rcnn_bbox_pred  = self.rcnn_bbox_fc(x)
 
         if self.training:
-            self.rcnn_cls_loss, self.rcnn_box_loss = self.build_rcnn_loss(rcnn_cls_prob, rcnn_box_pred, im_blob['gt_boxes'])
+            self.rcnn_cls_loss, self.rcnn_box_loss = self.build_rcnn_loss(rcnn_cls_prob, rcnn_bbox_pred, gt_boxes)
             pass
 
-        return rcnn_cls_prob, rcnn_box_pred, rois
+        return rcnn_cls_prob, rcnn_bbox_pred, rois
 
     @staticmethod
     def build_rcnn_loss(rcnn_cls_prob, rcnn_box_pred, gt_boxes): 
-        pass
+        return rcnn_cls_loss, rcnn_box_loss
 
 
 

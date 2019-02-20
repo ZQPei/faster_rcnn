@@ -10,7 +10,14 @@ from ..config import cfg
 
 
 class RoIDataLayer(object):
-    """Fast R-CNN data layer used for training."""
+    """Fast R-CNN data layer used for training.
+        A blob is a dict with these keys:
+            im_data,
+            gt_boxes,
+            gt_ishard,
+            im_info,
+            im_name
+    """
 
     def __init__(self, roidb):
         """Set the roidb to be used by this layer during training."""
@@ -41,6 +48,7 @@ class RoIDataLayer(object):
         """Get blob and copy them into this layer's top blob vector."""
         blob = self._get_next_minibatch()
         return blob
+
 
     # To get a better understanding of roidb prepared by this function
     # 'im_data': array([[[23.       , 36.       , 68.       ],
