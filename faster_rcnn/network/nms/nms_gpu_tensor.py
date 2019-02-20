@@ -26,7 +26,7 @@ def NMS(dets, threshold):
     keep = None
     while order.numel() > 0:
         i = order[0]
-        if keep:
+        if keep is not None:
             torch.cat([keep, i])
         else:
             keep = torch.tensor([i]).long().cuda()
