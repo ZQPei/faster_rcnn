@@ -195,7 +195,7 @@ class FasterRCNN(nn.Module):
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
         if nms and pred_boxes.shape[0]>0:
-            nms_mask = nms(torch.cat([pred_boxes, scores.view(-1,1)]), threshold=cfg.TEST.RCNN_NMS_THRESH)
+            nms_mask = nms(torch.cat([pred_boxes, scores.view(-1,1)], dim=1), threshold=cfg.TEST.RCNN_NMS_THRESH)
             pred_boxes = pred_boxes[nms_mask,:]
             scores = scores[nms_mask]
             cls_inds = cls_inds[nms_mask]
