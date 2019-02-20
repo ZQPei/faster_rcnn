@@ -174,6 +174,7 @@ class FasterRCNN(nn.Module):
         rcnn_bbox_pred  (N, 84)
         rois  (N, 4)
         """
+        import ipdb; ipdb.set_trace()
         # filter bg cls and scores smaller than min_score
         scores, cls_inds = rcnn_cls_prob.max(1)
         mask = (cls_inds>0)*(scores>=min_score)
