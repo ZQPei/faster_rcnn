@@ -99,7 +99,7 @@ class FasterRCNN(nn.Module):
         self._normalize = transforms.Normalize(mean, std)
 
         self.features = BasicNetwork()
-        self.rpn = RPN(self.basic_network.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
+        self.rpn = RPN(self.features.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
         feature_stride = cfg.NETWORK.FEATURE_STRIDE # <== feature stride
         roi_pooled_size = cfg.NETWORK.ROI_POOLED_SIZE
         self.roipool_layer = RoIPool(roi_pooled_size, roi_pooled_size, 1./feature_stride)
