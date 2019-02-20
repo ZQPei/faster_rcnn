@@ -38,7 +38,8 @@ def NMS(dets, threshold):
         inds = np.where(IoU<threshold)[0]
         order = order[inds+1]
 
-    return keep
+    mask = np.array(keep, dtype=np.int64)
+    return mask
         
 
 
