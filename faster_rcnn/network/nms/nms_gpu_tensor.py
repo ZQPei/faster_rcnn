@@ -37,7 +37,7 @@ def NMS(dets, threshold):
         IoU = inter_area/(areas[i]+areas[order[1:]]-inter_area)
 
         inds = IoU<threshold
-        order = order[inds+1]
+        order = order[1:][inds]
 
     mask = torch.tensor(keep).long()
     return mask
