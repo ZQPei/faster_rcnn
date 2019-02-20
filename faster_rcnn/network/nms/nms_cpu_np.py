@@ -65,11 +65,11 @@ def NMS2(dets, threshold):
 
         w = np.maximum(0.0, xx2 - xx1 + 1)
         h = np.maximum(0.0, yy2 - yy1 + 1)
-        inter = w * h
-        ovr = inter / (areas[i] + areas[order[1:]] - inter)
+        inter_area = w * h
+        IoU = inter_area/(areas[i]+areas[order[1:]]-inter_area)
 
-        inds = np.where(ovr <= threshold)[0]
-        order = order[inds + 1]
+        inds = np.where(IoU<=threshold)[0]
+        order = order[inds+1]
 
     mask = np.array(keep, dtype=np.int64)
     return mask
