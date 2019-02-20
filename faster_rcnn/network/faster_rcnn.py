@@ -176,7 +176,7 @@ class FasterRCNN(nn.Module):
         """
         # filter bg cls and scores smaller than min_score
         scores, cls_inds = rcnn_cls_prob.max(1)
-        mask = (cls_inds>0)*(scores>=min_score)
+        mask = (cls_inds>-1)*(scores>=min_score)
         scores = scores[mask]
         cls_inds = cls_inds[mask]
         box_deltas = rcnn_bbox_pred[mask, :]
