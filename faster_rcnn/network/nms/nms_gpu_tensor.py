@@ -30,8 +30,8 @@ def NMS(dets, threshold):
         # compute IoU
         xx1 = torch.max(x1[i], x1[order[1:]])
         yy1 = torch.max(y1[i], y1[order[1:]])
-        xx2 = torch.max(x2[i], x2[order[1:]])
-        yy2 = torch.max(y2[i], y2[order[1:]])
+        xx2 = torch.min(x2[i], x2[order[1:]])
+        yy2 = torch.min(y2[i], y2[order[1:]])
 
         w = xx2 - xx1 + 1
         h = yy2 - yy1 +1
