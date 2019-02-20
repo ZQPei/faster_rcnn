@@ -40,14 +40,17 @@ def NMS2(dets, threshold):
     """
     assert dets.ndim == 2 and dets.shape[1] == 5, "input error of dets"
 
-    x1 = dets[:, 0]
-    y1 = dets[:, 1]
-    x2 = dets[:, 2]
-    y2 = dets[:, 3]
-    scores = dets[:, 4]
+    x1 = dets[:,0]
+    y1 = dets[:,1]
+    x2 = dets[:,2]
+    y2 = dets[:,3]
+    score = dets[:,4]
 
-    areas = (x2 - x1 + 1) * (y2 - y1 + 1)
-    order = scores.argsort()[::-1]
+    # 1 compute areas
+    areas = (x2-x1+1) * (y2-y1+1)
+
+    # 2 sort score
+    order = score.argsort()[::-1]
 
     # 3 del bbox of those IoU greater than threshold
     keep = []
