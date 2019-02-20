@@ -167,7 +167,7 @@ class FasterRCNN(nn.Module):
         return rcnn_cls_loss, rcnn_box_loss
 
     @staticmethod
-    def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score, nms=True, clip=True):
+    def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score, use_nms=True, use_clip=True):
         """
         Say N is the number of rois
         rcnn_cls_prob  (N, 21)
@@ -194,7 +194,7 @@ class FasterRCNN(nn.Module):
         if clip:
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
-        if nms and pred_boxes.shape[0]>0:
+        if use_nms and pred_boxes.shape[0]>0:
             nms_mask = nms(torch.cat([pred_boxes, scores.view(-1,1)], dim=1), threshold=cfg.TEST.RCNN_NMS_THRESH)
             pred_boxes = pred_boxes[nms_mask,:]
             scores = scores[nms_mask]
