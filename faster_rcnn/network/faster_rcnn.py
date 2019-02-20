@@ -6,8 +6,10 @@ from .modules import *
 from .vgg import vgg16_bn as vgg16
 from .resnet import resnet50
 
+from .proposal_layer import proposal_layer
 from .roi_pooling.modules.roi_pool_py import RoIPool as RoIPool_py
 from .roi_pooling.modules.roi_pool import RoIPool
+
 
 from ..utils.timer import Timer
 from ..config import cfg
@@ -37,6 +39,7 @@ class RPN(nn.Module):
     def __init__(self, in_channels, out_channels, sliding_window_size=3):
         super(RPN, self).__init__()
 
+        self.feature_stride = cfg.NETWORK.FEATURE_STRIDE
         self.anchor_scales = cfg.NETWORK.ANCHOR_SCALES
         self.anchor_ratios = cfg.NETWORK.ANCHOR_RATIOS
 
@@ -59,8 +62,9 @@ class RPN(nn.Module):
         rpn_bbox_pred = self.bbox_conv(x)
 
         # proposal layer
-        rois = self.rpn_get_proposal(rpn_cls_score, rpn_bbox_pred, im_info)
+        rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feat_stride, self.anchor_scales)
 
+        # generating training labels and build the rpn loss
         if self.training:
             pass
 
@@ -68,6 +72,7 @@ class RPN(nn.Module):
 
     @staticmethod
     def build_rpn_loss(rpn_cls_score, rpn_bbox_pred, ):
+        rpn_cls_loss ,rpn_bbox_loss = None, None
         return rpn_cls_loss ,rpn_bbox_loss
 
     @staticmethod
@@ -79,9 +84,6 @@ class RPN(nn.Module):
         rpn_cls_prob = rpn_cls_prob.resize(b, c, h, w)
         return rpn_cls_prob
         
-    @staticmethod
-    def rpn_get_proposal():
-        pass
 
 class FasterRCNN(nn.Module):
     """Faster RCNN network
@@ -154,10 +156,11 @@ class FasterRCNN(nn.Module):
 
     @staticmethod
     def build_rcnn_loss(rcnn_cls_prob, rcnn_box_pred, gt_boxes): 
+        rcnn_cls_loss, rcnn_box_loss = None, None
         return rcnn_cls_loss, rcnn_box_loss
 
 
 
     
     def detect(self, x):
-        return bboxes
+        pass

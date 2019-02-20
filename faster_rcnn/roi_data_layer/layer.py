@@ -112,7 +112,7 @@ class RoIDataLayer(object):
     #     [  0.      , 295.49548 , 290.0901  , 598.1982  ,   9.      ]],
     # dtype=float32),
     # 'gt_ishard': array([0, 1, 0, 0, 1, 1, 1, 0, 0, 0], dtype=int32),
-    # 'im_info': array([901.       ,   3.       ,   1.8018018], dtype=float32),
+    # 'im_info': array([600.       , 901.       ,   1.8018018], dtype=float32),
     # 'im_name': '000564.jpg'}
 
 
