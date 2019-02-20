@@ -57,7 +57,6 @@ class RPN(nn.Module):
         
     def forward(self, im_data, im_info, gt_boxes, gt_ishard):
         x = self.conv(im_data)
-        import ipdb; ipdb.set_trace()
         # rpn cls prob
         rpn_cls_score = self.cls_conv(x)
         rpn_cls_prob = self.rpn_score_to_prob_softmax(rpn_cls_score)
@@ -65,8 +64,9 @@ class RPN(nn.Module):
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
 
+        import ipdb; ipdb.set_trace()
         # proposal layer
-        rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
+        rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
 
         # generating training labels and build the rpn loss
         if self.training:
@@ -83,9 +83,9 @@ class RPN(nn.Module):
     def rpn_score_to_prob_softmax(rpn_cls_score):
         b, c, h, w = rpn_cls_score.shape
         d = 2
-        rpn_cls_score = rpn_cls_score.resize(b, d, c//d, h, w)
+        rpn_cls_score = rpn_cls_score.view(b, d, c//d, h, w)
         rpn_cls_prob = F.softmax(rpn_cls_score, dim=1)
-        rpn_cls_prob = rpn_cls_prob.resize(b, c, h, w)
+        rpn_cls_prob = rpn_cls_prob.view(b, c, h, w)
         return rpn_cls_prob
         
 
