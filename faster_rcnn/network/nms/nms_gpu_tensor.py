@@ -23,7 +23,7 @@ def NMS(dets, threshold):
 
     # 3 del bbox of those IoU greater than threshold
     keep = []
-    while order.size > 0:
+    while order.numel() > 0:
         i = order[0]
         keep.append(i)
         # compute IoU
