@@ -23,7 +23,7 @@ def NMS(dets, threshold):
 
     # 3 del bbox of those IoU greater than threshold
     # import ipdb; ipdb.set_trace()
-    keep = torch.LongTensor([])
+    keep = torch.LongTensor([]).cuda()
     while order.numel() > 0:
         i = order[0]
         torch.cat([keep, i])
