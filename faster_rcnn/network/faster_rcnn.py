@@ -57,6 +57,7 @@ class RPN(nn.Module):
         
     def forward(self, im_data, im_info, gt_boxes, gt_ishard):
         x = self.conv(im_data)
+        import ipdb; ipdb.set_trace()
         # rpn cls prob
         rpn_cls_score = self.cls_conv(x)
         rpn_cls_prob = self.rpn_score_to_prob_softmax(rpn_cls_score)
@@ -64,7 +65,6 @@ class RPN(nn.Module):
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
 
-        import ipdb; ipdb.set_trace()
         # proposal layer
         rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
 
