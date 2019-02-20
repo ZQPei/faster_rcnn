@@ -7,7 +7,7 @@ import torch
 
 from .generate_anchors import generate_anchors
 from .bbox_transform import bbox_transform_inv, clip_boxes, filter_boxes
-from .nms import nms, nms_cpu, nms_cpu2
+from .nms import nms
 from ..config import cfg
 
 def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, anchor_scales):
@@ -121,6 +121,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
 
     # 2. clip predicted boxes to image
     proposals = clip_boxes(proposals, im_width, im_height)
+    import ipdb; ipdb.set_trace()
 
     # 3. remove predicted boxes with either height or width < threshold
     # (NOTE: convert min_size to input image scale stored in im_info[2])
@@ -138,12 +139,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # 7. take after_nms_topN (e.g. 300)
     # 8. return the top proposals (-> RoIs top)
     # sanity nms check 
-    print(len(nms_cpu(np.hstack([proposals.data.cpu().numpy(), scores.data.cpu().numpy()]), nms_thresh)))
-    print(len(nms_cpu2(np.hstack([proposals.data.cpu().numpy(), scores.data.cpu().numpy()]), nms_thresh)))
-
     mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
-    print(mask.shape)
-    import ipdb; ipdb.set_trace()
     proposals = proposals[mask, :]
     # scores = scores[mask, :]
 

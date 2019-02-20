@@ -67,7 +67,6 @@ class RPN(nn.Module):
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
 
-        import ipdb; ipdb.set_trace()
         # proposal layer
         rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
 
@@ -145,7 +144,7 @@ class FasterRCNN(nn.Module):
 
     def forward(self, im_data, im_info, gt_boxes, gt_ishard):
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
-        import ipdb; ipdb.set_trace()
+
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
