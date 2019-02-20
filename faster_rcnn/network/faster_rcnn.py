@@ -18,6 +18,7 @@ class BasicNetwork(nn.Module):
     """Basic Network to get feature map
     """
     def __init__(self, net_name=None):
+        super(BasicNetwork, self).__init__()
         if net_name is None:
             self.conv = vgg16(pretrained=True)
             del self.conv.classifier.fc
