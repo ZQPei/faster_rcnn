@@ -183,6 +183,7 @@ class FasterRCNN(nn.Module):
         im_height, im_width, im_scale_ratio = im_info.data
         boxes = rois[mask, :]/im_scale_ratio
 
+        import ipdb; ipdb.set_trace()
         if cls_inds.shape[0]==0:
             return boxes, scores, cls_inds
         # do bbox transform
