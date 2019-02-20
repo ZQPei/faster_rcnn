@@ -108,14 +108,14 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)
     # in slowest to fastest order
     import ipdb; ipdb.set_trace()
-    bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).view(-1, 4)
+    bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous().view(-1, 4)
 
     # Same story for the scores:
     #
     # scores are (1, A, H, W) format
     # transpose to (1, H, W, A)
     # reshape to (1 * H * W * A, 1) where rows are ordered by (h, w, a)
-    scores = scores.permute(0, 2, 3, 1).view(-1, 1)
+    scores = scores.permute(0, 2, 3, 1).contiguous().view(-1, 1)
 
     # Convert anchors into proposals via bbox transformations
     proposals = bbox_transform_inv(anchors, bbox_deltas)
