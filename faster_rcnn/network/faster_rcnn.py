@@ -140,7 +140,7 @@ class FasterRCNN(nn.Module):
         import ipdb; ipdb.set_trace()
         feature_map = self.features(im_data)
 
-        rois = self.rpn(feature_map)
+        rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
         # roi pooling
         roi_pooled_features = self.roipool_layer(feature_map, rois)
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
