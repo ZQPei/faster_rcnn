@@ -26,7 +26,7 @@ def NMS(dets, threshold):
     keep = torch.LongTensor([]).cuda()
     while order.numel() > 0:
         i = order[0]
-        torch.cat([keep, torch.LongTensor([i]).long.cuda()])
+        torch.cat([keep, torch.LongTensor([i]).cuda()])
         # compute IoU
         xx1 = torch.max(x1[i], x1[order[1:]])
         yy1 = torch.max(y1[i], y1[order[1:]])
