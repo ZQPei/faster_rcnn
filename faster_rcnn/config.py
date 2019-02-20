@@ -109,13 +109,13 @@ cfg.TEST = EasyDict()
 
 # NMS config during test phase
 # NMS threshold used on RPN proposals
-cfg.TRAIN.RPN_NMS_THRESH = 0.7
+cfg.TEST.RPN_NMS_THRESH = 0.7
 # Number of top scoring boxes to keep before apply NMS to RPN proposals
-cfg.TRAIN.RPN_PRE_NMS_TOP_N = 6000
+cfg.TEST.RPN_PRE_NMS_TOP_N = 6000
 # Number of top scoring boxes to keep after applying NMS to RPN proposals
-cfg.TRAIN.RPN_POST_NMS_TOP_N = 300
+cfg.TEST.RPN_POST_NMS_TOP_N = 300
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
-cfg.TRAIN.PRN_MIN_SIZE = 16
+cfg.TEST.PRN_MIN_SIZE = 16
 
 
 if __name__ == "__main__":
