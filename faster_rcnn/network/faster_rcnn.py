@@ -210,7 +210,6 @@ class FasterRCNN(nn.Module):
             prob_boxes, scores, cls_inds
         """
         import ipdb; ipdb.set_trace()
-        im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
         rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
         prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score=score_thresh)
