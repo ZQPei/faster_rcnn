@@ -132,7 +132,7 @@ class FasterRCNN(nn.Module):
             im_data = transform(im_data)
         im_data = im_data.unsqueeze(0)
         if is_cuda:
-            im_data = im_data.to()
+            im_data = im_data.cuda()
         return im_data
 
     def forward(self, im_data, im_info, gt_boxes, gt_ishard):
