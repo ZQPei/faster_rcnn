@@ -21,7 +21,7 @@ class BasicNetwork(nn.Module):
         super(BasicNetwork, self).__init__()
         if net_name is None:
             self.conv = vgg16(pretrained=True)
-            del self.conv.classifier.fc
+            del self.conv.classifier
         else:
             eval(cfg.NETWORK.BASIC_NETWORK)()
 
