@@ -65,7 +65,7 @@ class RPN(nn.Module):
         rpn_bbox_pred = self.bbox_conv(x)
 
         # proposal layer
-        rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feat_stride, self.anchor_scales)
+        rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
 
         # generating training labels and build the rpn loss
         if self.training:
