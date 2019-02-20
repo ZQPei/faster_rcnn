@@ -139,6 +139,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # 8. return the top proposals (-> RoIs top)
     # sanity nms check 
     print(len(nms_cpu(np.hstack([proposals.data.cpu().numpy(), scores.data.cpu().numpy()]), nms_thresh)))
+    print(len(nms_cpu2(np.hstack([proposals.data.cpu().numpy(), scores.data.cpu().numpy()]), nms_thresh)))
 
     mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
     print(mask.shape)
