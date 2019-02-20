@@ -183,7 +183,6 @@ class FasterRCNN(nn.Module):
         im_height, im_width, im_scale_ratio = im_info.data
         boxes = rois[mask, :]/im_scale_ratio
 
-        import ipdb; ipdb.set_trace()
         if cls_inds.shape[0]==0:
             return boxes, scores, cls_inds
         # do bbox transform
@@ -215,7 +214,7 @@ class FasterRCNN(nn.Module):
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
         rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
         prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, score_thresh)
-        prob_boxes, scores, cls_inds = prob_boxes.numpy(), scores.numpy(), cls_inds.numpy()
+        prob_boxes, scores, cls_inds = (prob_boxes*im_info[2]).numpy(), scores.numpy(), cls_inds.numpy()
         return prob_boxes, scores, cls_inds
 
         
