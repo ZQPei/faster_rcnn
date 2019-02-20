@@ -56,7 +56,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     bbox_deltas = rpn_bbox_pred
 
     # 1. Generate proposals from bbox deltas and shifted anchors
-    im_height, im_width, im_scale_ratio = im_info
+    im_height, im_width, im_scale_ratio = im_info.data
     height, width = scores.shape[-2:]
 
     # Enumerate all shifts
