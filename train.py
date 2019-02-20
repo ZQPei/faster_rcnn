@@ -16,7 +16,7 @@ prepare_roidb(imdb)
 data_layer = RoIDataLayer(imdb.roidb)
 
 # network definition
-net = FasterRCNN(imdb.num_classes)
+# net = FasterRCNN(imdb.num_classes)
 
 
 from IPython import embed; embed()

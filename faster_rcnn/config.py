@@ -52,7 +52,7 @@ cfg.NETWORK.RCNN_FC_OUTCHANNELS = 4096
 cfg.NETWORK.NUM_ANCHORS = 9
 cfg.NETWORK.NUM_ANCHOR_SCALES = 3
 cfg.NETWORK.NUM_ANCHOR_RATIOS = 3
-# This is the feature stride size of a feature map. Feature stride doubled for each maxpooling layer
+# This is the feature stride size of a feature map. Feature stride is the downsampling ratio of feature map to the original input image.
 # e.g. VGG16's feature stride is 16 (2^4) for it's 4 maxpooling layer
 cfg.NETWORK.FEATURE_STRIDE = 16 
 cfg.NETWORK.ANCHOR_SCALES = [8, 16, 32]
@@ -72,7 +72,8 @@ cfg.NETWORK.ANCHOR_RATIOS = [0.5, 1., 2.]
 # RoI pooling layer config
 cfg.NETWORK.ROI_POOLED_SIZE = 7
 
-# During train ================================================================================
+
+# During train phase ================================================================================
 cfg.TRAIN = EasyDict() 
 
 # Scales to use during training (can list multiple scales)
@@ -88,8 +89,33 @@ assert cfg.TRAIN.HAS_RPN and cfg.TRAIN.IMS_PER_BATCH is 1, "Single batch only wh
 # Minibatch size (number of regions of interest [ROIs])  --> minibatch is a batch contained of RoIs
 cfg.TRAIN.BATCH_SIZE = 128
 
-# During test =================================================================================
+# RPN 
+cfg.TRAIN.RPN_BATCH_SIZE = 256
 
+# NMS config during train phase
+# NMS threshold used on RPN proposals
+cfg.TRAIN.RPN_NMS_THRESH = 0.7
+# Number of top scoring boxes to keep before apply NMS to RPN proposals
+cfg.TRAIN.RPN_PRE_NMS_TOP_N = 12000
+# Number of top scoring boxes to keep after applying NMS to RPN proposals
+cfg.TRAIN.RPN_POST_NMS_TOP_N = 2000
+# Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
+cfg.TRAIN.PRN_MIN_SIZE = 16
+
+
+
+# During test phase =================================================================================
+cfg.TEST = EasyDict()
+
+# NMS config during test phase
+# NMS threshold used on RPN proposals
+cfg.TRAIN.RPN_NMS_THRESH = 0.7
+# Number of top scoring boxes to keep before apply NMS to RPN proposals
+cfg.TRAIN.RPN_PRE_NMS_TOP_N = 6000
+# Number of top scoring boxes to keep after applying NMS to RPN proposals
+cfg.TRAIN.RPN_POST_NMS_TOP_N = 300
+# Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
+cfg.TRAIN.PRN_MIN_SIZE = 16
 
 
 if __name__ == "__main__":
