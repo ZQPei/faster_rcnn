@@ -191,7 +191,7 @@ class FasterRCNN(nn.Module):
             box_deltas[i, cls_inds[i]*4 : cls_inds[i]*4+4] for i in range(cls_inds.shape[0])
         ], dim=0)
         pred_boxes = bbox_transform_inv(boxes, box_deltas)
-        if clip:
+        if use_clip:
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
         if use_nms and pred_boxes.shape[0]>0:
