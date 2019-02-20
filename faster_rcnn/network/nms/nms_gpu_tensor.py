@@ -22,7 +22,7 @@ def NMS(dets, threshold):
     order = score.sort(dim=0,descending=True)[1]
 
     # 3 del bbox of those IoU greater than threshold
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     keep = []
     while order.numel() > 0:
         i = order[0]
