@@ -33,7 +33,11 @@ def NMS(dets, threshold):
         xx2 = torch.max(x2[i], x2[order[1:]])
         yy2 = torch.max(y2[i], y2[order[1:]])
 
-        inter_area = torch.max(0, (xx2 - xx1 + 1))*torch.max(0, (yy2 - yy1 +1))
+        w = xx2 - xx1 + 1
+        h = yy2 - yy1 +1
+        w[w<0] = 0
+        h[h<0] = 0
+        inter_area = w*h
         IoU = inter_area/(areas[i]+areas[order[1:]]-inter_area)
 
         order = order[1:][IoU<threshold]
