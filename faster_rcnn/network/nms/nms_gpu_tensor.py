@@ -23,7 +23,7 @@ def NMS(dets, threshold):
 
     # 3 del bbox of those IoU greater than threshold
     # import ipdb; ipdb.set_trace()
-    mask = torch.zeros_like(order).long().cuda()
+    mask = torch.zeros_like(order, dtype=torch.uint8).cuda()
     while order.numel() > 0:
         i = order[0]
         mask[i] = 1
