@@ -30,7 +30,7 @@ im_info = inputs['im_info']
 gt_boxes = inputs['gt_boxes']
 gt_ishard = inputs['gt_ishard']
 
-rcnn_cls_prob, rcnn_bbox_pred, rois = net(im_data, im_info, gt_boxes, gt_ishard)
+# rcnn_cls_prob, rcnn_bbox_pred, rois = net(im_data, im_info, gt_boxes, gt_ishard)
 
 import cv2
 im = cv2.imread("img/test.jpg")
