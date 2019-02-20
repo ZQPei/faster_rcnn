@@ -23,13 +23,10 @@ def NMS(dets, threshold):
 
     # 3 del bbox of those IoU greater than threshold
     # import ipdb; ipdb.set_trace()
-    keep = None
+    keep = torch.LongTensor([]).cuda()
     while order.numel() > 0:
         i = order[0]
-        if keep is not None:
-            torch.cat([keep, i])
-        else:
-            keep = torch.tensor([i]).long().cuda()
+        torch.cat([keep, torch.LongTensor([i]).long.cuda()])
         # compute IoU
         xx1 = torch.max(x1[i], x1[order[1:]])
         yy1 = torch.max(y1[i], y1[order[1:]])
