@@ -48,20 +48,22 @@ def array_to_tensor(im_data, is_cuda=True, dtype=torch.FloatTensor):
 
 def weights_normal_init(model, devilation=0.01):
     """init the conv and bn and fc layers weights by standard devilation"""
+    import math
     if isinstance(model, list):
         for m in model:
             weights_normal_init(m, devilation)
     else:
         for m in model.modules():
             if isinstance(m, nn.Conv2d):
-                m.weight.data.normal_(0.0, devilation)
+                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
+                m.weight.data.normal_(0, math.sqrt(2. / n))
                 if m.bias is not None:
-                    m.bias.zero_()
+                    m.bias.data.zero_()
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
             elif isinstance(m, nn.Linear):
                 m.weight.data.normal_(0.0, devilation)
                 if m.bias is not None:
-                    m.bias.zero_()
+                    m.bias.data.zero_()
 
