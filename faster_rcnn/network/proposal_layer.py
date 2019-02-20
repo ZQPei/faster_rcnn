@@ -108,6 +108,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)
     # in slowest to fastest order
     bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous().view(-1, 4)
+    import ipdb; ipdb.set_trace()
 
     # Same story for the scores:
     #
@@ -121,7 +122,6 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
 
     # 2. clip predicted boxes to image
     proposals = clip_boxes(proposals, im_width, im_height)
-    import ipdb; ipdb.set_trace()
 
     # 3. remove predicted boxes with either height or width < threshold
     # (NOTE: convert min_size to input image scale stored in im_info[2])
