@@ -142,6 +142,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
 
     mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
     print(mask.shape)
+    import ipdb; ipdb.set_trace()
     proposals = proposals[mask, :]
     # scores = scores[mask, :]
 
