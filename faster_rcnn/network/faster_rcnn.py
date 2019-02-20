@@ -50,9 +50,9 @@ class RPN(nn.Module):
         self.num_anchors = cfg.NETWORK.NUM_ANCHORS
         self.cls_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
-        weights_normal_init(self.conv)
-        weights_normal_init(self.cls_conv)
-        weights_normal_init(self.bbox_conv)
+        # weights_normal_init(self.conv)
+        # weights_normal_init(self.cls_conv)
+        # weights_normal_init(self.bbox_conv)
 
         # loss
         self.rpn_cls_loss = None
