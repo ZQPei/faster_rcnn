@@ -13,7 +13,7 @@ def NMS(dets, threshold):
     y1 = dets[:,1]
     x2 = dets[:,2]
     y2 = dets[:,3]
-    score = dets[:4]
+    score = dets[:,4]
 
     # 1 compute areas
     areas = (x2-x1+1) * (y2-y1+1)

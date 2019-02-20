@@ -13,13 +13,13 @@ def NMS(dets, threshold):
     y1 = dets[:,1]
     x2 = dets[:,2]
     y2 = dets[:,3]
-    score = dets[:4]
+    score = dets[:,4]
 
     # 1 compute areas
     areas = (x2-x1+1) * (y2-y1+1)
 
     # 2 sort score 
-    order = score.sort(descending=True)[1]
+    order = score.sort(dim=,descending=True)[1]
 
     # 3 del bbox of those IoU greater than threshold
     import ipdb; ipdb.set_trace()
