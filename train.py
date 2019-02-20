@@ -38,6 +38,6 @@ im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 im_data, im_scale_ratio = preprocess(im)
 im_info = np.array([*im_data.shape[:2], im_scale_ratio])
 net.eval()
-res = net.detect(im, im_info)
+res = net.detect(im_data, im_info)
 
 from IPython import embed; embed()
