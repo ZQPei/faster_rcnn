@@ -113,7 +113,7 @@ class FasterRCNN(nn.Module):
             FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True)
         )
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)   # ==> 21
-        self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.n_classes * 4, relu=False)# ==> 21*4 = 84
+        self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes * 4, relu=False)# ==> 21*4 = 84
 
         self.use_cuda = cfg.USE_CUDA
 
