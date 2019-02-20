@@ -50,9 +50,6 @@ class RPN(nn.Module):
         self.num_anchors = cfg.NETWORK.NUM_ANCHORS
         self.cls_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
-        # weights_normal_init(self.conv)
-        # weights_normal_init(self.cls_conv)
-        # weights_normal_init(self.bbox_conv)
 
         # loss
         self.rpn_cls_loss = None
@@ -104,7 +101,6 @@ class FasterRCNN(nn.Module):
         self._normalize = transforms.Normalize(mean, std)
 
         self.features = BasicNetwork()
-        weights_normal_init(self.features)
         self.rpn = RPN(self.features.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
         feature_stride = cfg.NETWORK.FEATURE_STRIDE # <== feature stride
         roi_pooled_size = cfg.NETWORK.ROI_POOLED_SIZE
@@ -115,9 +111,6 @@ class FasterRCNN(nn.Module):
         )
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)
         self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, 4, relu=False)
-        weights_normal_init(self.rcnn_fc)
-        weights_normal_init(self.rcnn_cls_fc)
-        weights_normal_init(self.rcnn_bbox_fc)
 
         self.use_cuda = cfg.USE_CUDA
 
