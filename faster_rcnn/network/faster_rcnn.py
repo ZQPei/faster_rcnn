@@ -64,6 +64,7 @@ class RPN(nn.Module):
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
 
+        import ipdb; ipdb.set_trace()
         # proposal layer
         rois = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
 
