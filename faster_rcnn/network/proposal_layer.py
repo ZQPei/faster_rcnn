@@ -137,8 +137,11 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # 6. apply nms (e.g. threshold = 0.7)
     # 7. take after_nms_topN (e.g. 300)
     # 8. return the top proposals (-> RoIs top)
-    import ipdb; ipdb.set_trace()
+    # sanity nms check 
+    print(nms_cpu(np.hstack([proposals.data.cpu().numpy(), scores.data.cpu().numpy()]), nms_thresh).shape)
+
     mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
+    print(mask.shape)
     proposals = proposals[mask, :]
     # scores = scores[mask, :]
 
