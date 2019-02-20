@@ -167,7 +167,7 @@ class FasterRCNN(nn.Module):
         return rcnn_cls_loss, rcnn_box_loss
 
     @staticmethod
-    def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, nms=True, clip=True, min_score=0.0):
+    def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score, nms=True, clip=True):
         """
         Say N is the number of rois
         rcnn_cls_prob  (N, 21)
@@ -176,7 +176,7 @@ class FasterRCNN(nn.Module):
         """
         # filter bg cls and scores smaller than min_score
         scores, cls_inds = rcnn_cls_prob.max(1)
-        mask = (cls_inds>-1)*(scores>=min_score)
+        mask = (cls_inds>0)*(scores>=min_score)
         scores = scores[mask]
         cls_inds = cls_inds[mask]
         box_deltas = rcnn_bbox_pred[mask, :]
@@ -203,7 +203,7 @@ class FasterRCNN(nn.Module):
         return pred_boxes, scores, cls_inds
 
     
-    def detect(self, im_data, im_info, score_thresh=0.3):
+    def detect(self, im_data, im_info, score_thresh=0.0):
         """
         Input:
             im_data: numpy.ndarray
@@ -214,7 +214,7 @@ class FasterRCNN(nn.Module):
         """
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
         rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
-        prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score=score_thresh)
+        prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, score_thresh)
         prob_boxes, scores, cls_inds = prob_boxes.numpy(), scores.numpy(), cls_inds.numpy()
         return prob_boxes, scores, cls_inds
 
