@@ -32,7 +32,9 @@ def NMS(dets, threshold):
         xx2 = np.maximum(x2[i], x2[order[1:]])
         yy2 = np.maximum(y2[i], y2[order[1:]])
 
-        inter_area = (xx2 - xx1 + 1)*(yy2 - yy1 +1)
+        w = np.maximum(0.0, xx2 - xx1 + 1)
+        h = np.maximum(0.0, yy2 - yy1 + 1)
+        inter_area = w * h
         IoU = inter_area/(areas[i]+areas[order[1:]]-inter_area)
 
         inds = np.where(IoU<threshold)[0]
