@@ -19,7 +19,7 @@ def NMS(dets, threshold):
     areas = (x2-x1+1) * (y2-y1+1)
 
     # 2 sort score 
-    order = score.sort(densending=True)[1]
+    order = score.sort(descending=True)[1]
 
     # 3 del bbox of those IoU greater than threshold
     keep = []
