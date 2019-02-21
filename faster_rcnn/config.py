@@ -112,7 +112,7 @@ cfg.TRAIN.RPN_FG_FRACTION = 0.5
 cfg.TRAIN.RPN_BBOX_INSIDE_WEIGHTS = [1.0, 1.0, 1.0, 1.0]
 
 # Set to -1.0 to use uniform example weighting
-__C.TRAIN.RPN_POSITIVE_WEIGHT = -1.0
+cfg.TRAIN.RPN_POSITIVE_WEIGHT = -1.0
 
 
 # During test phase =================================================================================
