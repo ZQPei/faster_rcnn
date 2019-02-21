@@ -45,7 +45,7 @@ def array_to_tensor(array, is_cuda=True, dtype=torch.float32):
     tensor = torch.from_numpy(array).permute(0,3,1,2).type(dtype)
     tensor.requires_grad = False
     if is_cuda:
-        tensor.cuda()
+        tensor = tensor.cuda()
     return tensor
 
 def tensor_to_array(tensor, dtype=np.float32):
