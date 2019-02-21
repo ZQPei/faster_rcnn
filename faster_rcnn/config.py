@@ -93,6 +93,20 @@ cfg.TRAIN.FG_FRACTION = 0.25
 # Overlap threshold for a ROI to be considered foreground (if >= FG_THRESH)
 cfg.TRAIN.FG_THRESH = 0.5
 
+# Overlap threshold for a ROI to be considered background (class = 0 if
+# overlap in [LO, HI))
+cfg.TRAIN.BG_THRESH_HI = 0.5
+cfg.TRAIN.BG_THRESH_LO = 0.1
+
+cfg.TRAIN.BBOX_INSIDE_WEIGHTS = (1.0, 1.0, 1.0, 1.0)
+# Normalize the targets using "precomputed" (or made up) means and stdevs
+# (BBOX_NORMALIZE_TARGETS must also be True)
+cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED = True
+cfg.TRAIN.BBOX_NORMALIZE_MEANS = (0.0, 0.0, 0.0, 0.0)
+cfg.TRAIN.BBOX_NORMALIZE_STDS = (0.1, 0.1, 0.2, 0.2)
+
+
+
 # RPN 
 cfg.TRAIN.RPN_BATCH_SIZE = 256
 

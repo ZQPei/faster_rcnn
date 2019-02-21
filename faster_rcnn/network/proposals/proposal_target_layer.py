@@ -82,8 +82,10 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
     overlaps = bbox_overlaps(all_rois, gt_boxes[:,:4])
     max_overlaps, gt_assignment = overlaps.max(dim=1)  # R
     labels = gt_boxes[gt_assignment, 4]
+    inds = torch.arange(labels.shape[0]).long()
+    if cfg.USE_CUDA:
+        inds = inds.cuda()
 
-    import ipdb; ipdb.set_trace()
     # preclude hard samples
     if cfg.TRAIN.PRECLUDE_HARD_SAMPLES and gt_ishard is not None and gt_ishard.shape[0] > 0:
         gt_ishard = gt_ishard.long()
@@ -95,18 +97,94 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
             # hard_gt_assignment = hard_overlaps.argmax(axis=0)  # H
             ignore_mask = (hard_max_overlaps >= cfg.TRAIN.FG_THRESH)
 
+    # import ipdb; ipdb.set_trace()
     # Select foreground RoIs as those with >= FG_THRESH overlap
     fg_mask = (max_overlaps >= cfg.TRAIN.FG_THRESH)
-    fg_mask = fg_mask - ignore_mask
+    fg_mask = (torch.max(fg_mask,ignore_mask) - torch.min(fg_mask,ignore_mask))
+    fg_num = fg_mask.sum().item()
     # Guard against the case when an image has fewer than fg_rois_per_image
     # foreground RoIs
-    fg_rois_per_this_image = min(fg_rois_per_image, fg_inds.size)
-    # Sample foreground regions without replacement
-    if fg_inds.size > 0:
-        fg_inds = npr.choice(fg_inds, size=fg_rois_per_this_image, replace=False)
+    fg_rois_per_this_image = min(fg_rois_per_image, fg_num)
+    fg_inds = inds[fg_mask]
+    if cfg.USE_CUDA:
+        rand_inds = torch.randperm(fg_inds.shape[0]).cuda()
+    fg_inds = fg_inds[rand_inds][:fg_rois_per_this_image]
+
+    # Select background RoIs as those within [BG_THRESH_LO, BG_THRESH_HI)
+    bg_mask = ((max_overlaps < cfg.TRAIN.BG_THRESH_HI) * (max_overlaps >= cfg.TRAIN.BG_THRESH_LO))
+    bg_mask = (torch.max(bg_mask,ignore_mask) - torch.min(bg_mask,ignore_mask))
+    bg_num = bg_mask.sum().item()
+
+    # Compute number of background RoIs to take from this image (guarding
+    # against there being fewer than desired)
+    bg_rois_per_this_image = rois_per_image - fg_rois_per_this_image
+    bg_rois_per_this_image = min(bg_rois_per_this_image, bg_num)
+    bg_inds = inds[bg_mask]
+    if cfg.USE_CUDA:
+        rand_inds = torch.randperm(bg_inds.shape[0]).cuda()
+    bg_inds = bg_inds[rand_inds][:bg_rois_per_this_image]
+
+    # Select sampled values from various arrays:
+    keep_inds = torch.cat([fg_inds, bg_inds])
+    labels = labels[keep_inds]
+    # Clamp labels for the background RoIs to 0
+    labels[fg_rois_per_this_image:] = 0
+    rois = all_rois[keep_inds]
+
+    bbox_target_data = _compute_targets( \
+        rois[:, 1:5], gt_boxes[gt_assignment[keep_inds], :4], labels)
+    
+    bbox_targets, bbox_inside_weights = \
+        _get_bbox_regression_labels(bbox_target_data, num_classes)
 
     return labels, rois, bbox_targets, bbox_inside_weights
 
+def _compute_targets(ex_rois, gt_rois, labels):
+    """Compute bounding-box regression targets for an image."""
+
+    assert ex_rois.shape[0] == gt_rois.shape[0]
+    assert ex_rois.shape[1] == 4
+    assert gt_rois.shape[1] == 4
+
+    targets = bbox_transform(ex_rois, gt_rois)
+    if cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED:
+        # Optionally normalize targets by a precomputed mean and stdev
+        mean = torch.tensor(cfg.TRAIN.BBOX_NORMALIZE_MEANS).float()
+        std  = torch.tensor(cfg.TRAIN.BBOX_NORMALIZE_STDS)
+        if cfg.USE_CUDA:
+            mean, std = mean.cuda(), std.cuda()
+        targets = ((targets - mean) / std)
+    return torch.cat([labels.view(-1,1), targets], dim=1)
+
+def _get_bbox_regression_labels(bbox_target_data, num_classes):
+    """Bounding-box regression targets (bbox_target_data) are stored in a
+    compact form N x (class, tx, ty, tw, th)
+
+    This function expands those targets into the 4-of-4*K representation used
+    by the network (i.e. only one class has non-zero targets).
+
+    Returns:
+        bbox_target (ndarray): N x 4K blob of regression targets
+        bbox_inside_weights (ndarray): N x 4K blob of loss weights
+    """
+
+    clss = bbox_target_data[:, 0]
+    bbox_targets = torch.zeros((clss.size, 4 * num_classes).float())
+    bbox_inside_weights = torch.zeros(bbox_targets.shape).float()
+    if cfg.USE_CUDA:
+        bbox_targets, bbox_inside_weights = bbox_targets.cuda(), bbox_inside_weights.cuda()
+    inds = torch.arange(clss.shape[0]).long()[clss > 0]
+    for ind in inds:
+        cls = int(clss[ind.item()])
+        start = 4 * cls
+        end = start + 4
+        bbox_targets[ind, start:end] = bbox_target_data[ind, 1:]
+        if cfg.USE_CUDA:
+            bbox_inside_weights[ind, start:end] = torch.tensor(cfg.TRAIN.BBOX_INSIDE_WEIGHTS).float().cuda()
+        else:
+            bbox_inside_weights[ind, start:end] = torch.tensor(cfg.TRAIN.BBOX_INSIDE_WEIGHTS).float()
+
+    return bbox_targets, bbox_inside_weights
 
 def _jitter_gt_boxes(gt_boxes, jitter=0.05):
     """ jitter the gtboxes, before adding them into rois, to be more robust for cls and rgs
