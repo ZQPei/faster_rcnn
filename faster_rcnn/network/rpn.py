@@ -75,11 +75,9 @@ class RPN(nn.Module):
                 self.anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info)
             if cfg.DEBUG:
                 toc("Get anchor_target_layer time:")
-            import ipdb; ipdb.set_trace()
             
             if cfg.DEBUG:
                 tic()
-            import ipdb; ipdb.set_trace()
             self.rpn_cls_loss, self.rpn_box_loss = \
                 build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights)
             if cfg.DEBUG:

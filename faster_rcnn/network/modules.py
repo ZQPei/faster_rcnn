@@ -42,7 +42,7 @@ def load_net(net, fname):
     torch.load(net, fname)
 
 def array_to_tensor(array, is_cuda=True, dtype=torch.float32):
-    tensor = torch.from_numpy(array).permute(0,3,1,2).type(dtype)
+    tensor = torch.from_numpy(array).type(dtype)
     tensor.requires_grad = False
     if is_cuda:
         tensor = tensor.cuda()
