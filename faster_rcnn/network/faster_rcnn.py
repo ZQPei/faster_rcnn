@@ -58,9 +58,9 @@ class FasterRCNN(nn.Module):
         self._normalize = transforms.Normalize(mean, std)
 
         self.features = eval(cfg.NETWORK.BASIC_NETWORK)()
-        del self.conv.layer4
-        del self.conv.avgpool
-        del self.conv.fc
+        del self.features.layer4
+        del self.features.avgpool
+        del self.features.fc
 
         self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 
