@@ -102,6 +102,14 @@ cfg.TRAIN.RPN_POST_NMS_TOP_N = 2000
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
 cfg.TRAIN.RPN_MIN_SIZE = 16
 
+cfg.TRAIN.PRECLUDE_HARD_SAMPLES = True
+# IOU >= thresh: positive example
+cfg.TRAIN.RPN_POSITIVE_OVERLAP = 0.7
+# IOU < thresh: negative example
+cfg.TRAIN.RPN_NEGATIVE_OVERLAP = 0.3
+# Max number of foreground examples
+cfg.TRAIN.RPN_FG_FRACTION = 0.5
+cfg.TRAIN.RPN_BBOX_INSIDE_WEIGHTS = [1.0, 1.0, 1.0, 1.0]
 
 
 # During test phase =================================================================================

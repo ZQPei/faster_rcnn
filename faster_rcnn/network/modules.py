@@ -67,3 +67,24 @@ def weights_normal_init(model, devilation=0.01):
                 if m.bias is not None:
                     m.bias.data.zero_()
 
+def weights_normal_init_kaiming(model, devilation=0.01):
+    """init the conv and bn and fc layers weights by standard devilation"""
+    if isinstance(model, list):
+        for m in model:
+            weights_normal_init(m, devilation)
+    else:
+        for m in model.modules():
+            if isinstance(m, nn.Conv2d):
+                nn.init.kaiming_normal_(m.weight)
+                if m.bias is not None:
+                    m.bias.data.zero_()
+            elif isinstance(m, nn.BatchNorm2d):
+                nn.init.kaiming_normal_(m.weight)
+                m.bias.data.zero_()
+            elif isinstance(m, nn.Linear):
+                nn.init.kaiming_normal_(m.weight)
+                if m.bias is not None:
+                    m.bias.data.zero_()
+
+
+weight_init = weights_normal_init_kaiming

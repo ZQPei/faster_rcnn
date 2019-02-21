@@ -9,12 +9,16 @@ from .vgg import vgg16_bn as vgg16
 from .resnet import resnet50
 
 from .proposals.proposal_layer import proposal_layer
+from .proposals.anchor_target_layer import anchor_target_layer
 from .proposals.bbox_transform import bbox_transform_inv, clip_boxes
 
 from .nms import nms
 
 from .roi_pooling.modules.roi_pool_py import RoIPool as RoIPool_py
 from .roi_pooling.modules.roi_pool import RoIPool
+
+from ..loss_function.rpn_loss import build_rpn_loss
+from ..loss_function.rcnn_loss import build_rcnn_loss
 
 from ..utils.timer import Timer
 from ..config import cfg
@@ -54,12 +58,14 @@ class RPN(nn.Module):
         self.cls_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
 
+        self.use_cuda = cfg.USE_CUDA
+
         # loss
         self.rpn_cls_loss = None
         self.rpn_box_loss = None
         
-    def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
-        x = self.conv(im_data)
+    def forward(self, feature_map, im_info, gt_boxes=None, gt_ishard=None):
+        x = self.conv(feature_map)
         # rpn cls prob
         rpn_cls_score = self.cls_conv(x)
         rpn_cls_prob = self.rpn_score_to_prob_softmax(rpn_cls_score)
@@ -72,14 +78,21 @@ class RPN(nn.Module):
 
         # generating training labels and build the rpn loss
         if self.training:
-            pass
+            feature_map_size = feature_map.shape[-2:]
+            rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
+                anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, self.feature_stride, self.anchor_scales)
+
+            rpn_labels = torch.from_numpy(rpn_labels).long()
+            rpn_bbox_targets = torch.from_numpy(rpn_bbox_targets).float()
+            rpn_bbox_inside_weights = torch.from_numpy(rpn_bbox_inside_weights).float()
+            rpn_bbox_outside_weights = torch.from_numpy(rpn_bbox_outside_weights).float()
+            if self.use_cuda:
+                rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
+                    rpn_labels.cuda(), rpn_bbox_targets.cuda(), rpn_bbox_inside_weights.cuda(), rpn_bbox_outside_weights.cuda()
+            self.rpn_cls_loss, self.rpn_box_loss = \
+                build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights)
 
         return rois
-
-    @staticmethod
-    def build_rpn_loss(rpn_cls_score, rpn_bbox_pred, ):
-        rpn_cls_loss ,rpn_bbox_loss = None, None
-        return rpn_cls_loss ,rpn_bbox_loss
 
     @staticmethod
     def rpn_score_to_prob_softmax(rpn_cls_score):
@@ -114,9 +127,9 @@ class FasterRCNN(nn.Module):
         )
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)   # ==> 21
         self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes * 4, relu=False)# ==> 21*4 = 84
-        weights_normal_init(self.rcnn_fc)
-        weights_normal_init(self.rcnn_cls_fc)
-        weights_normal_init(self.rcnn_bbox_fc)
+        weight_init(self.rcnn_fc)
+        weight_init(self.rcnn_cls_fc)
+        weight_init(self.rcnn_bbox_fc)
 
         self.use_cuda = cfg.USE_CUDA
 
