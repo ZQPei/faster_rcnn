@@ -84,10 +84,8 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
     )[0]
     anchors = all_anchors[inds_inside, :]
 
-    A = anchors.shape[0]
-    G = gt_boxes.shape[0]
     # label: 1 is positive, 0 is negative, -1 is dont care
-    labels = np.full((A,), -1, dtype=np.float32)  # (A)
+    labels = np.full((anchors.shape[0],), -1, dtype=np.float32)  # (A)
 
     # overlaps between the anchors and the gt boxes
     # overlaps (anchors, gt), shape is A x G
