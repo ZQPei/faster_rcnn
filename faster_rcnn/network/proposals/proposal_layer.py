@@ -144,12 +144,6 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
         keep = keep[:post_nms_topN]
     proposals = proposals[keep, :]
     scores = scores[keep]
-    # mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
-
-    dets = torch.cat([proposals,scores], dim=1).cpu().numpy().astype(np.float32)
-    inds = nms(dets, nms_thresh)
-    inds = torch.tensor(inds).long().cuda()
-    proposals = proposals[inds, :]
 
     return proposals
 
