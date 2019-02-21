@@ -103,6 +103,7 @@ for step in range(start_step, end_step):
 
         if verbose:
             #print(tp,fg,tf,bg,step_cnt,sep='\n')
+            import ipdb; ipdb.set_trace()
             log_print('\tTP: %.2f%%, TF: %.2f%%, fg/bg=(%d/%d)' % (tp/fg*100., tf/bg*100., fg/step_cnt, bg/step_cnt))
             #import ipdb; ipdb.set_trace()
             log_print('\trpn_cls: %.4f, rpn_box: %.4f, rcnn_cls: %.4f, rcnn_box: %.4f' % (
