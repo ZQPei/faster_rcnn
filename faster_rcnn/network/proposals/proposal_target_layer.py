@@ -131,8 +131,9 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
     labels[fg_rois_per_this_image:] = 0
     rois = all_rois[keep_inds]
 
+    import ipdb; ipdb.set_trace()
     bbox_target_data = _compute_targets( \
-        rois[:, 1:5], gt_boxes[gt_assignment[keep_inds], :4], labels)
+        rois, gt_boxes[gt_assignment[keep_inds], :4], labels)
     
     bbox_targets, bbox_inside_weights = \
         _get_bbox_regression_labels(bbox_target_data, num_classes)
