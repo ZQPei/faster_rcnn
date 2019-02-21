@@ -2,9 +2,9 @@ import numpy as np
 import torch
 
 from faster_rcnn.datasets.pascal_voc import Pascal_VOC
-from faster_rcnn.roi_data_layer.roidb import prepare_roidb
-from faster_rcnn.roi_data_layer.layer import RoIDataLayer
-from faster_rcnn.roi_data_layer.minibatch import preprocess
+from faster_rcnn.data_layer.roidb import prepare_roidb
+from faster_rcnn.data_layer.layer import DataLayer
+from faster_rcnn.data_layer.minibatch import preprocess
 
 from faster_rcnn.network.faster_rcnn import FasterRCNN
 

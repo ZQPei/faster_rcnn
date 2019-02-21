@@ -9,7 +9,7 @@ from .minibatch import get_minibatch
 from ..config import cfg
 
 
-class RoIDataLayer(object):
+class DataLayer(object):
     """Fast R-CNN data layer used for training.
         A blob is a dict with these keys:
             im_data,

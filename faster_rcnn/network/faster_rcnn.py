@@ -8,13 +8,13 @@ from .modules import *
 from .vgg import vgg16_bn as vgg16
 from .resnet import resnet50
 
-from .proposal_layer import proposal_layer
-from .bbox_transform import bbox_transform_inv, clip_boxes
+from .proposals.proposal_layer import proposal_layer
+from .proposals.bbox_transform import bbox_transform_inv, clip_boxes
+
 from .nms import nms
 
 from .roi_pooling.modules.roi_pool_py import RoIPool as RoIPool_py
 from .roi_pooling.modules.roi_pool import RoIPool
-
 
 from ..utils.timer import Timer
 from ..config import cfg

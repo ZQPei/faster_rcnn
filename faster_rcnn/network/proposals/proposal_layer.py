@@ -7,8 +7,9 @@ import torch
 
 from .generate_anchors import generate_anchors
 from .bbox_transform import bbox_transform_inv, clip_boxes, filter_boxes
-from .nms import nms
-from ..config import cfg
+
+from ..nms import nms
+from ...config import cfg
 
 def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, anchor_scales):
     """
