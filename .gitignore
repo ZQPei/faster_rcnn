@@ -2,6 +2,7 @@
 *.jpg
 *.so
 *.o
+*.npy
 
 
 models/
