@@ -1,6 +1,8 @@
 import torch
 import numpy as np
 
+import random
+
 from .bbox_transform import bbox_transform_torch as bbox_transform
 from .bbox import bbox_overlaps_torch as bbox_overlaps
 
@@ -114,8 +116,12 @@ def _jitter_gt_boxes(gt_boxes, jitter=0.05):
     jittered_boxes = torch.empty_like(gt_boxes).copy_(gt_boxes)
     ws = jittered_boxes[:, 2] - jittered_boxes[:, 0] + 1.0
     hs = jittered_boxes[:, 3] - jittered_boxes[:, 1] + 1.0
-    width_offset = (torch.rand(jittered_boxes.shape[0]) - 0.5) * jitter * ws
-    height_offset = (torch.rand(jittered_boxes.shape[0]) - 0.5) * jitter * hs
+    if cfg.USE_CUDA:
+        width_offset = (torch.rand(jittered_boxes.shape[0]).cuda() - 0.5) * jitter * ws
+        height_offset = (torch.rand(jittered_boxes.shape[0]).cuda() - 0.5) * jitter * hs
+    else:
+        width_offset = (torch.rand(jittered_boxes.shape[0]) - 0.5) * jitter * ws
+        height_offset = (torch.rand(jittered_boxes.shape[0]) - 0.5) * jitter * hs
     jittered_boxes[:, 0] += width_offset
     jittered_boxes[:, 2] += width_offset
     jittered_boxes[:, 1] += height_offset
