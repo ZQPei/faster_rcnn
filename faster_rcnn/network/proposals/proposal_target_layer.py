@@ -54,6 +54,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
     zeros = torch.zeros((gt_easyboxes.shape[0] * 2, 1), dtype=gt_easyboxes.dtype)
     if cfg.USE_CUDA:
         zeros = zeros.cuda()
+    import ipdb; ipdb.set_trace()
     all_rois = torch.cat( \
         (all_rois, torch.cat((zeros, torch.cat((gt_easyboxes[:, :-1], jittered_gt_boxes[:, :-1]), dim=0)), dim=1)), dim=0)
 
