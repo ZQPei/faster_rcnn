@@ -7,7 +7,7 @@ cfg = EasyDict()
 
 cfg.SEED = 1024
 
-cfg.DEBUG = False
+cfg.DEBUG = True
 
 # CUDA config
 cfg.USE_CUDA = True
