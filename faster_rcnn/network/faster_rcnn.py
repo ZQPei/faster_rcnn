@@ -32,7 +32,7 @@ class BasicNetwork(nn.Module):
             self.conv = vgg16(pretrained=True)
             del self.conv.classifier
         else:
-            self.conv = eval(cfg.NETWORK.BASIC_NETWORK)()
+            self.conv = eval(cfg.NETWORK.BASIC_NETWORK)(pretrained=True)
             del self.conv.layer4
             del self.conv.avgpool
             del self.conv.fc
@@ -57,7 +57,7 @@ class FasterRCNN(nn.Module):
         std  = cfg.STD
         self._normalize = transforms.Normalize(mean, std)
 
-        self.features = eval(cfg.NETWORK.BASIC_NETWORK)()
+        self.features = eval(cfg.NETWORK.BASIC_NETWORK)(pretrained=True)
         del self.features.layer4
         del self.features.avgpool
         del self.features.fc
