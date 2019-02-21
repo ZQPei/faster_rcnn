@@ -41,7 +41,7 @@ if cfg.USE_CUDA:
 if verbose:
     print(net)
 
-cudnn.benchmark = True
+# cudnn.benchmark = True
 
 # Iteration config
 start_step = cfg.TRAIN.START_STEP
