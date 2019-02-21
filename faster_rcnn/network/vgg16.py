@@ -63,6 +63,23 @@ class VGG16(nn.Module):
                 param = param.permute(3, 2, 0, 1)
             val.copy_(param)
 
+    def load_pretrained_npy(fname):
+        params = np.load(fname, encoding='bytes').item()
+        # vgg16
+        params = self.state_dict()
+        for name, val in params.items():
+            if name.find('bn.') >= 0:
+                continue
+            i, j = int(name[4]), int(name[6]) + 1
+            ptype = b'weights' if name[-1] == 't' else b'biases'
+            key = b'conv%d_%d'%(i, j)
+            param = torch.from_numpy(params[key][ptype])
+
+            if ptype == b'weights':
+                param = param.permute(3, 2, 0, 1)
+
+            val.copy_(param)
+
     # def load_from_npy_file(self, fname):
     #     own_dict = self.state_dict()
     #     params = np.load(fname).item()

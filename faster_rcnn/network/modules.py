@@ -98,3 +98,20 @@ weight_init = weights_normal_init
 def set_trainable(model, requires_grad):
     for param in model.parameters():
         param.requires_grad = requires_grad
+
+def clip_gradient(model, clip_norm):
+    """Computes a gradient clipping coefficient based on gradient norm."""
+    totalnorm = 0
+    for p in model.parameters():
+        if p.requires_grad:
+            modulenorm = p.grad.data.norm()
+            totalnorm += modulenorm ** 2
+    totalnorm = torch.sqrt(totalnorm)
+
+    norm = clip_norm / max(totalnorm, clip_norm)
+    for p in model.parameters():
+        if p.requires_grad:
+            if torch.__version__[2]=='4' or torch.__version__[0]=='1':
+                p.grad.mul_(float(norm))
+            else:
+                p.grad.mul_(norm)

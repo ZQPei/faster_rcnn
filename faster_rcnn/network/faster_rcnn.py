@@ -58,8 +58,8 @@ class FasterRCNN(nn.Module):
         std  = cfg.STD
         self._normalize = transforms.Normalize(mean, std)
 
-        self.features = VGG16()
-        self.features.load_from_npz(np.load('models/VGG_imagenet.npy'))
+        self.features = VGG16(bn=False)
+        self.features.load_pretrained_npy('models/VGG_imagenet.npy')
 
         self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 

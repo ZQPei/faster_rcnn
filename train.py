@@ -10,7 +10,7 @@ from faster_rcnn.data_layer.layer import DataLayer
 from faster_rcnn.data_layer.minibatch import preprocess
 
 from faster_rcnn.network.faster_rcnn import FasterRCNN
-from faster_rcnn.network.modules import save_net, load_net
+from faster_rcnn.network.modules import save_net, load_net, clip_gradient
 
 from faster_rcnn.utils.log_print import log_print
 from faster_rcnn.utils.timer import Timer
@@ -88,6 +88,7 @@ for step in range(start_step, end_step):
     # bachward
     optimizer.zero_grad()
     loss.backward()
+    clip_gradient(net, 10.)
     optimizer.step()
 
     step_cnt += 1
