@@ -49,6 +49,7 @@ def bbox_transform_torch(ex_rois, gt_rois):
     targets_dw = torch.log(gt_widths / ex_widths)
     targets_dh = torch.log(gt_heights / ex_heights)
 
+    import ipdb; ipdb.set_trace()
     targets = torch.cat(
         (targets_dx, targets_dy, targets_dw, targets_dh)).t_().contiguous()
     return targets
