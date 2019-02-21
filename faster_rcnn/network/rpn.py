@@ -45,8 +45,7 @@ class RPN(nn.Module):
         return self.rpn_cls_loss + self.rpn_box_loss*10
         
     def forward(self, feature_map, im_info, gt_boxes=None, gt_ishard=None):
-        if cfg.DEBUG:
-            tic()
+        
         x = self.conv(feature_map)
 
         # rpn cls prob
@@ -55,33 +54,19 @@ class RPN(nn.Module):
 
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
-        if cfg.DEBUG:
-            toc("Get rpn conv time:")
-
-        if cfg.DEBUG:
-            tic()
+        
         # proposal layer to RCNN network as input
         rois = self.proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info)
-
-        if cfg.DEBUG:
-            toc("Get rpn proposal layer time:")
 
         # generating training labels and build the rpn loss
         if self.training:
             feature_map_size = feature_map.shape[-2:]
-            if cfg.DEBUG:
-                tic()
             rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
                 self.anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info)
-            if cfg.DEBUG:
-                toc("Get anchor_target_layer time:")
             
-            if cfg.DEBUG:
-                tic()
             self.rpn_cls_loss, self.rpn_box_loss = \
                 build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights)
-            if cfg.DEBUG:
-                toc("Get build_rpn_loss time:")
+
         return rois
 
     @staticmethod
