@@ -5,6 +5,7 @@ def build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, 
     # classification loss
     fg_cnt = torch.sum(labels.data.ne(0)).item()
     bg_cnt = labels.data.numel() - fg_cnt
+    import ipdb; ipdb.set_trace()
     ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
     ce_weights[0] = 1. *fg_cnt / bg_cnt
     
