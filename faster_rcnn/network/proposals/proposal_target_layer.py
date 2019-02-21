@@ -56,7 +56,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
         zeros = zeros.cuda()
     import ipdb; ipdb.set_trace()
     all_rois = torch.cat( \
-        (all_rois, torch.cat((zeros, torch.cat((gt_easyboxes[:, :-1], jittered_gt_boxes[:, :-1]), dim=0)), dim=1)), dim=0)
+        (all_rois, gt_easyboxes[:, :-1], jittered_gt_boxes[:, :-1]), dim=0)
 
     rois_per_image = cfg.TRAIN.BATCH_SIZE
     fg_rois_per_image = int(cfg.TRAIN.FG_FRACTION * rois_per_image)
