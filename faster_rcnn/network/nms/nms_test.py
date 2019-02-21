@@ -32,7 +32,7 @@ dets = torch.tensor([[3, 3, 6, 6, 0.7, 0.8, 0.2],
         [4, 4, 6, 6, 0.8, 0.3, 0.7], 
         [8.5, 8.5, 7, 7, 0.5, 0.4, 0.6]]).cuda()
 
-mask = NMS(dets[:,:5], 0.5)
+mask = nms(dets[:,:5], 0.5)
 
 from IPython import embed; embed()
 
