@@ -65,7 +65,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
         all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_image, num_classes)
 
     rois = rois.view(-1, 4)
-    labels = labels.view(-1, 1)
+    labels = labels.long().view(-1, 1)
     bbox_targets = bbox_targets.view(-1, num_classes * 4)
     bbox_inside_weights = bbox_inside_weights.view(-1, num_classes * 4)
 
