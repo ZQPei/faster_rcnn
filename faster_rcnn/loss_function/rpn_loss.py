@@ -10,7 +10,7 @@ def build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, r
     rpn_cls_score = rpn_cls_score[mask, :]
     rpn_labels = rpn_labels[mask]
 
-    fg_cnt = rpn_labels.data.sum().item()
+    fg_cnt = rpn_labels.data.ne(0).sum().item()
     rpn_cross_entropy = F.cross_entropy(rpn_cls_score, rpn_labels)
 
     # box loss
