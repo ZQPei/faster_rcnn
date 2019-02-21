@@ -37,7 +37,7 @@ net.train()
 if cfg.USE_CUDA:
     net.cuda()
 
-cudnn.benchmark()
+cudnn.benchmark = True
 
 # Iteration config
 start_step = cfg.TRAIN.START_STEP
