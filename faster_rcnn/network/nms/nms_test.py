@@ -1,7 +1,7 @@
 import torch
 
 import _ext.nms._nms as nms
-from nms_gpu_tensor import NMS
+from nms_gpu_torch import NMS
 
 bbox = [[[3, 3, 6, 6, 0.7, 0.8, 0.2], 
         [4, 4, 6, 6, 0.8,0.7, 0.3], 
