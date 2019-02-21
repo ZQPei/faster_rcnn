@@ -170,6 +170,7 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
     bbox_outside_weights = _unmap(bbox_outside_weights, total_anchors, inds_inside, fill=0)
 
     # labels
+    import ipdb; ipdb.set_trace()
     labels = labels.reshape((1, height, width, A))
     labels = labels.transpose(0, 3, 1, 2)
     rpn_labels = labels.reshape((1, 1, A * height, width)).transpose(0, 2, 3, 1)
