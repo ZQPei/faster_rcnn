@@ -79,7 +79,8 @@ class FasterRCNN(nn.Module):
     def loss(self):
         return self.rcnn_cls_loss + self.rcnn_box_loss*10
 
-    def preprocess(self, im_data, transform=None, is_cuda=False):
+    @staticmethod
+    def preprocess(im_data, transform=None, is_cuda=False):
         """
         Input:
             im_data: HxWxC, numpy.ndarray, [0,255], RGB color
@@ -91,7 +92,8 @@ class FasterRCNN(nn.Module):
         if transform is not None:
             im_data = transform(im_data)
         im_data = im_data.unsqueeze(0)
-        im_data = array_to_tensor(im_data, is_cuda=self.use_cuda)
+        if is_cuda:
+            im_data = im_data.cuda()
         return im_data
 
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
