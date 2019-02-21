@@ -148,7 +148,6 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     inds = nms(dets, nms_thresh)
     inds = torch.tensor(inds).long().cuda()
     proposals = proposals[inds, :]
-    import ipdb; ipdb.set_trace()
     if cfg.DEBUG:
         toc("Get rpn nms time:")
     # proposals = proposals[mask, :]
