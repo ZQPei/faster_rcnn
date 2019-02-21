@@ -105,8 +105,8 @@ for step in range(start_step, end_step):
             log_print('\tTP: %.2f%%, TF: %.2f%%, fg/bg=(%d/%d)' % (tp/fg*100., tf/bg*100., fg/step_cnt, bg/step_cnt))
             #import ipdb; ipdb.set_trace()
             log_print('\trpn_cls: %.4f, rpn_box: %.4f, rcnn_cls: %.4f, rcnn_box: %.4f' % (
-                net.rpn.cross_entropy.data.cpu().numpy(), net.rpn.loss_box.data.cpu().numpy(),
-                net.cross_entropy.data.cpu().numpy(), net.loss_box.data.cpu().numpy())
+                net.rpn.rpn_cls_loss.data.cpu().numpy(), net.rpn.rpn_box_loss.data.cpu().numpy(),
+                net.rcnn_cls_loss.data.cpu().numpy(), net.rcnn_box_loss.data.cpu().numpy())
             )
         re_cnt = True
 
