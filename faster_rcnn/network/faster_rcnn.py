@@ -7,6 +7,7 @@ import numpy as np
 from .modules import *
 from .vgg import vgg16_bn as vgg16
 from .resnet import resnet18, resnet50
+from .vgg16 import VGG16
 
 from .rpn import RPN
 
@@ -57,10 +58,8 @@ class FasterRCNN(nn.Module):
         std  = cfg.STD
         self._normalize = transforms.Normalize(mean, std)
 
-        self.features = eval(cfg.NETWORK.BASIC_NETWORK)(pretrained=True)
-        del self.features.layer4
-        del self.features.avgpool
-        del self.features.fc
+        self.features = VGG16()
+        self.features.load_from_npz('models/VGG_imagenet.npy')
 
         self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 

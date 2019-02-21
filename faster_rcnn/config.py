@@ -42,8 +42,11 @@ cfg.DATASET.NAME = 'Pascal_VOC'
 # they were trained with
 # cfg.PIXEL_MEANS = np.array([[[102.9801, 115.9465, 122.7717]]]) # <== This is BGR, set by Ross Girshick in his code
 # To use pytorch official pretrained models, we should do the normalization by its mean and std used in training pretrained models
-cfg.MEAN = [0.485, 0.456, 0.406]
-cfg.STD  = [0.229, 0.224, 0.225]
+# cfg.MEAN = [0.485, 0.456, 0.406]
+# cfg.STD  = [0.229, 0.224, 0.225]
+cfg.MEAN = [122.7717, 115.9465, 102.9801]
+cfg.STD  = [1.0, 1.0, 1.0]
+
 
 # Network config ==============================================================================
 cfg.NETWORK = EasyDict()
