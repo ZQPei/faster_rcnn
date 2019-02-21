@@ -3,6 +3,8 @@ import torch.nn as nn
 
 import numpy as np
 
+from .modules import *
+
 from .proposals.proposal_layer import proposal_layer
 from .proposals.anchor_target_layer import anchor_target_layer
 
