@@ -59,10 +59,10 @@ class FasterRCNN(nn.Module):
         std  = cfg.STD
         self._normalize = transforms.Normalize(mean, std)
 
-        self.features = BasicNetwork(net_name=cfg.NETWORK.BASIC_NETWORK)
+        # self.features = BasicNetwork(net_name=cfg.NETWORK.BASIC_NETWORK)
 
-        # self.features = VGG16(bn=False)
-        # load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
+        self.features = VGG16(bn=False)
+        load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
 
         self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 
@@ -100,7 +100,7 @@ class FasterRCNN(nn.Module):
         Return:
             Normalized im_data: 1xCxHxW, torch.tensor
         """
-        im_data = (im_data).astype(np.float32)/255
+        im_data = (im_data).astype(np.float32)#/255
         im_data = torch.from_numpy(im_data).permute(2,0,1)
         if transform is not None:
             im_data = transform(im_data)
