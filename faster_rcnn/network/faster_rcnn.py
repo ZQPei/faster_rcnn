@@ -6,7 +6,7 @@ import numpy as np
 
 from .modules import *
 from .vgg import vgg16_bn as vgg16
-from .resnet import resnet18
+from .resnet import resnet18, resnet50
 
 from .rpn import RPN
 
