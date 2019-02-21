@@ -139,7 +139,7 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # 7. take after_nms_topN (e.g. 300)
     # 8. return the top proposals (-> RoIs top)
     # import ipdb; ipdb.set_trace()
-    from ...utils.Timer import tic, toc
+    from ...utils.timer import tic, toc
     if cfg.DEBUG:
         tic()
     mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
