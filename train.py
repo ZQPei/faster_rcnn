@@ -2,6 +2,7 @@ import os
 
 import numpy as np
 import torch
+import torch.backends.cudnn as cudnn
 
 from faster_rcnn.datasets.pascal_voc import Pascal_VOC
 from faster_rcnn.data_layer.roidb import prepare_roidb
@@ -35,6 +36,8 @@ net = FasterRCNN(imdb.num_classes)
 net.train()
 if cfg.USE_CUDA:
     net.cuda()
+
+cudnn.benchmark()
 
 # Iteration config
 start_step = cfg.TRAIN.START_STEP
