@@ -87,6 +87,7 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
         inds = inds.cuda()
 
     # preclude hard samples
+    ignore_mask = torch.zeros_like(max_overlaps).type(torch.uint8)
     if cfg.TRAIN.PRECLUDE_HARD_SAMPLES and gt_ishard is not None and gt_ishard.shape[0] > 0:
         gt_ishard = gt_ishard.long()
         gt_hardboxes = gt_boxes[gt_ishard.eq(1), :]
