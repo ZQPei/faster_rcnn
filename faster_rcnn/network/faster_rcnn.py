@@ -148,6 +148,7 @@ class FasterRCNN(nn.Module):
         return rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights
 
     def build_rcnn_loss(self, rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights):
+        labels = labels.squeeze()
         # classification loss
         fg_cnt = torch.sum(labels.data.ne(0)).item()
         bg_cnt = labels.data.numel() - fg_cnt
