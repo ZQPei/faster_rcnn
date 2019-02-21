@@ -6,7 +6,7 @@ import numpy as np
 
 from .modules import *
 from .vgg import vgg16_bn as vgg16
-from .resnet import resnet50
+from .resnet import resnet18
 
 from .rpn import RPN
 
@@ -32,7 +32,7 @@ class BasicNetwork(nn.Module):
             self.conv = vgg16(pretrained=True)
             del self.conv.classifier
         else:
-            eval(cfg.NETWORK.BASIC_NETWORK)()
+            self.conv = eval(cfg.NETWORK.BASIC_NETWORK)()
             del self.conv.layer4
             del self.conv.avgpool
             del self.conv.fc
@@ -63,7 +63,7 @@ class FasterRCNN(nn.Module):
         del self.conv.fc
 
         self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
-        
+
 
         self.rpn = RPN(self.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
         feature_stride = cfg.NETWORK.FEATURE_STRIDE # <== feature stride
