@@ -27,7 +27,31 @@ def bbox_transform_np(ex_rois, gt_rois):
         (targets_dx, targets_dy, targets_dw, targets_dh)).transpose()
     return targets
 
-bbox_transform = bbox_transform_np
+def bbox_transform_torch(ex_rois, gt_rois):
+    """
+    computes the distance from ground-truth boxes to the given boxes, normed by their size
+    :param ex_rois: n * 4 torch tensor, given boxes
+    :param gt_rois: n * 4 torch tensor, ground-truth boxes
+    :return: deltas: n * 4 torch tensor, ground-truth boxes
+    """
+    ex_widths = ex_rois[:, 2] - ex_rois[:, 0] + 1.0
+    ex_heights = ex_rois[:, 3] - ex_rois[:, 1] + 1.0
+    ex_ctr_x = ex_rois[:, 0] + 0.5 * ex_widths
+    ex_ctr_y = ex_rois[:, 1] + 0.5 * ex_heights
+
+    gt_widths = gt_rois[:, 2] - gt_rois[:, 0] + 1.0
+    gt_heights = gt_rois[:, 3] - gt_rois[:, 1] + 1.0
+    gt_ctr_x = gt_rois[:, 0] + 0.5 * gt_widths
+    gt_ctr_y = gt_rois[:, 1] + 0.5 * gt_heights
+
+    targets_dx = (gt_ctr_x - ex_ctr_x) / ex_widths
+    targets_dy = (gt_ctr_y - ex_ctr_y) / ex_heights
+    targets_dw = torch.log(gt_widths / ex_widths)
+    targets_dh = torch.log(gt_heights / ex_heights)
+
+    targets = torch.cat(
+        (targets_dx, targets_dy, targets_dw, targets_dh)).t_().contiguous()
+    return targets
 
 def bbox_transform_inv_torch(boxes, deltas):
     """

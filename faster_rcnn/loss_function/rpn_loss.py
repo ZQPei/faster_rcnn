@@ -18,6 +18,6 @@ def build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, r
     rpn_bbox_targets = rpn_bbox_targets.mul(rpn_bbox_inside_weights)
     rpn_bbox_pred = rpn_bbox_pred.mul(rpn_bbox_inside_weights)
 
-    rpn_box_loss = F.smooth_l1_loss(rpn_bbox_pred, rpn_bbox_targets, size_average=False) / (fg_cnt + 1e-4)
+    rpn_box_loss = F.smooth_l1_loss(rpn_bbox_pred, rpn_bbox_targets, reduction='sum') / (fg_cnt + 1e-4)
 
     return rpn_cross_entropy, rpn_box_loss

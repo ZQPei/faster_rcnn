@@ -2,8 +2,8 @@ import torch
 import numpy as np
 
 from .generate_anchors import generate_anchors
-from .bbox_transform import bbox_transform
-from .bbox import bbox_overlaps
+from .bbox_transform import bbox_transform_np as bbox_transform
+from .bbox import bbox_overlaps_np as bbox_overlaps
 
 from ...config import cfg
 
@@ -138,6 +138,7 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
             bg_inds, size=(len(bg_inds) - num_bg), replace=False)
         labels[disable_inds] = -1
 
+    import ipdb; ipdb.set_trace()
     bbox_targets = _compute_targets(anchors, gt_boxes[argmax_overlaps, :])
 
     bbox_inside_weights = np.zeros((len(inds_inside), 4), dtype=np.float32)
