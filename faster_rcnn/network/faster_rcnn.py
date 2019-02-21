@@ -92,8 +92,7 @@ class FasterRCNN(nn.Module):
         if transform is not None:
             im_data = transform(im_data)
         im_data = im_data.unsqueeze(0)
-        if is_cuda:
-            im_data = im_data.cuda()
+        im_data = array_to_tensor(im_data, is_cuda=self.use_cuda)
         return im_data
 
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
@@ -101,7 +100,7 @@ class FasterRCNN(nn.Module):
 
         if cfg.DEBUG:
             tic()
-
+        import ipdb; ipdb.set_trace()
         feature_map = self.features(im_data)
 
         if cfg.DEBUG:

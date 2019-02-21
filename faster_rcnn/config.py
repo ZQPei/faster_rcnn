@@ -13,6 +13,9 @@ cfg.DEBUG = False
 cfg.USE_CUDA = True
 cfg.CUDA_VISIBLE_DEVICES = 0
 
+import torch
+cfg.DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 # Directories of project
 cfg.SPECIFIC_NAME = "voc_resnet_0218"
