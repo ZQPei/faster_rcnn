@@ -12,7 +12,7 @@ from .nms import nms
 
 from ..loss_function.rpn_loss import build_rpn_loss
 
-from ..utils.timer import Timer
+from ..utils.timer import Timer, tic, toc
 from ..config import cfg
 
 
@@ -45,22 +45,36 @@ class RPN(nn.Module):
         return self.rpn_cls_loss + self.rpn_box_loss*10
         
     def forward(self, feature_map, im_info, gt_boxes=None, gt_ishard=None):
+        if cfg.DEBUG:
+            tic()
         x = self.conv(feature_map)
+
         # rpn cls prob
         rpn_cls_score = self.cls_conv(x)
         rpn_cls_prob = self.rpn_score_to_prob_softmax(rpn_cls_score)
 
         # rpn boxes
         rpn_bbox_pred = self.bbox_conv(x)
+        if cfg.DEBUG:
+            toc("Get rpn conv time:")
 
+        if cfg.DEBUG:
+            tic()
         # proposal layer to RCNN network as input
         rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
+
+        if cfg.DEBUG:
+            toc("Get rpn proposal layer time:")
 
         # generating training labels and build the rpn loss
         if self.training:
             feature_map_size = feature_map.shape[-2:]
+            if cfg.DEBUG:
+                tic()
             rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
                 anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, self.feature_stride, self.anchor_scales)
+            if cfg.DEBUG:
+                toc("Get anchor_target_layer time:")
 
             rpn_labels = torch.from_numpy(rpn_labels).long()
             rpn_bbox_targets = torch.from_numpy(rpn_bbox_targets).float()
@@ -69,9 +83,12 @@ class RPN(nn.Module):
             if self.use_cuda:
                 rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
                     rpn_labels.cuda(), rpn_bbox_targets.cuda(), rpn_bbox_inside_weights.cuda(), rpn_bbox_outside_weights.cuda()
+            if cfg.DEBUG:
+                tic()
             self.rpn_cls_loss, self.rpn_box_loss = \
                 build_rpn_loss(rpn_cls_score, rpn_bbox_pred, rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights)
-
+            if cfg.DEBUG:
+                toc("Get build_rpn_loss time:")
         return rois
 
     @staticmethod

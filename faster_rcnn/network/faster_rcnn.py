@@ -107,12 +107,9 @@ class FasterRCNN(nn.Module):
         if cfg.DEBUG:
             toc("Get feature map time:")
 
-        if cfg.DEBUG:
-            tic()
+
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
 
-        if cfg.DEBUG:
-            toc("Get RPN time:")
 
         if cfg.DEBUG:
             tic()
@@ -120,7 +117,7 @@ class FasterRCNN(nn.Module):
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
         if cfg.DEBUG:
-            toc("Get RPI POOL time:")
+            toc("Get proposal target layer time:")
 
         if cfg.DEBUG:
             tic()
