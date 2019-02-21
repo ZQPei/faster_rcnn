@@ -125,7 +125,7 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
             labels[max_intersec_label_inds] = -1  #
 
     # subsample positive labels if we have too many
-    num_fg = int(cfg.TRAIN.RPN_FG_FRACTION * cfg.TRAIN.RPN_BATCHSIZE)
+    num_fg = int(cfg.TRAIN.RPN_FG_FRACTION * cfg.TRAIN.RPN_BATCH_SIZE)
     fg_inds = np.where(labels == 1)[0]
     if len(fg_inds) > num_fg:
         disable_inds = np.random.choice(
@@ -133,7 +133,7 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
         labels[disable_inds] = -1
 
     # subsample negative labels if we have too many
-    num_bg = cfg.TRAIN.RPN_BATCHSIZE - np.sum(labels == 1)
+    num_bg = cfg.TRAIN.RPN_BATCH_SIZE - np.sum(labels == 1)
     bg_inds = np.where(labels == 0)[0]
     if len(bg_inds) > num_bg:
         disable_inds = np.random.choice(
