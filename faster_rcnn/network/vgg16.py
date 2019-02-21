@@ -71,8 +71,8 @@ class VGG16(nn.Module):
             if name.find('bn.') >= 0:
                 continue
             i, j = int(name[4]), int(name[6]) + 1
-            ptype = b'weights' if name[-1] == 't' else b'biases'
-            key = b'conv%d_%d'%(i, j)
+            ptype = 'weights' if name[-1] == 't' else 'biases'
+            key = 'conv%d_%d'%(i, j)
             param = torch.from_numpy(params[key][ptype])
 
             if ptype == b'weights':
