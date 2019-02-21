@@ -29,7 +29,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
     bbox_outside_weights: (1 x H x W x A, Kx4) 0, 1 masks for the computing loss
     """
 
-    gt_boxes = torch.from_numpy(gt_boxes).float()
+    gt_boxes = torch.from_numpy(gt_boxes[:,:4]).float()
     gt_ishard = torch.from_numpy(gt_ishard).long()
     if cfg.USE_CUDA:
         gt_boxes, gt_ishard = gt_boxes.cuda(), gt_ishard.cuda()
@@ -54,9 +54,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
     zeros = torch.zeros((gt_easyboxes.shape[0] * 2, 1), dtype=gt_easyboxes.dtype)
     if cfg.USE_CUDA:
         zeros = zeros.cuda()
-    import ipdb; ipdb.set_trace()
-    all_rois = torch.cat( \
-        (all_rois, gt_easyboxes[:, :-1], jittered_gt_boxes[:, :-1]), dim=0)
+    all_rois = torch.cat([all_rois, gt_easyboxes, jittered_gt_boxes], dim=0)
 
     rois_per_image = cfg.TRAIN.BATCH_SIZE
     fg_rois_per_image = int(cfg.TRAIN.FG_FRACTION * rois_per_image)
@@ -81,7 +79,8 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
     examples.
     """
     # overlaps: R x G
-    overlaps = bbox_overlaps(all_rois, gt_boxes[:, :4])
+    import ipdb; ipdb.set_trace()
+    overlaps = bbox_overlaps(all_rois, gt_boxes)
     max_overlaps, gt_assignment = overlaps.max(dim=1)  # R
     labels = gt_boxes[gt_assignment, 4]
 
@@ -92,7 +91,7 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
         gt_hardboxes = gt_boxes[gt_ishard.eq(1), :]
         if gt_hardboxes.shape[0] > 0:
             # R x H
-            hard_overlaps = bbox_overlaps(all_rois, gt_hardboxes[:, :4])
+            hard_overlaps = bbox_overlaps(all_rois, gt_hardboxes)
             hard_max_overlaps, _ = hard_overlaps.max(dim=1)  # R x 1
             # hard_gt_assignment = hard_overlaps.argmax(axis=0)  # H
             ignore_mask = (hard_max_overlaps >= cfg.TRAIN.FG_THRESH)
