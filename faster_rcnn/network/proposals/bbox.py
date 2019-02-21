@@ -19,6 +19,8 @@ def bbox_overlaps_torch(boxes, query_boxes):
         yy2 = torch.min(query_box[3], boxes[:,3])
         w = xx2-xx1+1
         h = yy2-yy1+1
+        w[w<0] = 0
+        h[h<0] = 0
         inter = w*h
         query_box_area = (query_box[2]-query_box[0]+1)*(query_box[3]-query_box[1]+1)
         overlaps.append( inter/(query_box_area+areas-inter) )
@@ -42,10 +44,12 @@ def bbox_overlaps_np(boxes, query_boxes):
     for query_box in query_boxes:
         xx1 = np.maximum(query_box[0], boxes[:,0])
         yy1 = np.maximum(query_box[1], boxes[:,1])
-        xx2 = np.maximum(query_box[2], boxes[:,2])
-        yy2 = np.maximum(query_box[3], boxes[:,3])
+        xx2 = np.minimum(query_box[2], boxes[:,2])
+        yy2 = np.minimum(query_box[3], boxes[:,3])
         w = xx2-xx1+1
         h = yy2-yy1+1
+        w[w<0] = 0
+        h[h<0] = 0
         inter = w*h
         query_box_area = (query_box[2]-query_box[0]+1)*(query_box[3]-query_box[1]+1)
         overlaps.append( inter/(query_box_area+areas-inter) )
