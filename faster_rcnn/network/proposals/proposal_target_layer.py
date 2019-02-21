@@ -79,7 +79,6 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
     examples.
     """
     # overlaps: R x G
-    import ipdb; ipdb.set_trace()
     overlaps = bbox_overlaps(all_rois, gt_boxes)
     max_overlaps, gt_assignment = overlaps.max(dim=1)  # R
     labels = gt_boxes[gt_assignment, 4]
