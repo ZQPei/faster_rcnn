@@ -65,6 +65,7 @@ t = Timer()
 t.tic()
 train_loss = 0
 step_cnt = 0
+tp, tf, fg, bg = 0., 0., 0, 0
 for step in range(start_step, end_step):
     inputs = data_layer.forward()
     im_data = inputs['im_data']
