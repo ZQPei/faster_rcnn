@@ -15,8 +15,8 @@ def bbox_overlaps_torch(boxes, query_boxes):
     for query_box in query_boxes:
         xx1 = torch.max(query_box[0], boxes[:,0])
         yy1 = torch.max(query_box[1], boxes[:,1])
-        xx2 = torch.max(query_box[2], boxes[:,2])
-        yy2 = torch.max(query_box[3], boxes[:,3])
+        xx2 = torch.min(query_box[2], boxes[:,2])
+        yy2 = torch.min(query_box[3], boxes[:,3])
         w = xx2-xx1+1
         h = yy2-yy1+1
         inter = w*h
