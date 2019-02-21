@@ -11,7 +11,7 @@ from .resnet import resnet50
 from .rpn import RPN
 
 from .proposals.proposal_target_layer import proposal_target_layer
-from .proposals.bbox_transform import bbox_transform_inv
+from .proposals.bbox_transform import bbox_transform_inv, clip_boxes
 
 from .nms import nms
 
