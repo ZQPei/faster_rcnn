@@ -67,6 +67,7 @@ class VGG16(nn.Module):
         params = np.load(fname, encoding='bytes').item()
         # vgg16
         params = self.state_dict()
+        import ipdb; ipdb.set_trace()
         for name, val in params.items():
             if name.find('bn.') >= 0:
                 continue
