@@ -22,7 +22,7 @@ torch.manual_seed(rand_seed)
 
 save_model_dir = cfg.SAVE_MODEL_DIR
 
-verbose = True
+verbose = cfg.VERBOSE
 
 # Dataset imdb
 dataset_name = cfg.DATASET.NAME
@@ -79,11 +79,10 @@ for step in range(start_step, end_step):
     train_loss = loss.item()
 
     if verbose:
-        # tp += float(net.tp)
-        # tf += float(net.tf)
-        # fg += net.fg_cnt
-        # bg += net.bg_cnt
-        pass
+        tp += float(net.tp)
+        tf += float(net.tf)
+        fg += net.fg_cnt
+        bg += net.bg_cnt
 
     # bachward
     optimizer.zero_grad()
@@ -100,6 +99,14 @@ for step in range(start_step, end_step):
             step, inputs['im_name'], train_loss / step_cnt, fps, 1./fps)
         log_print(log_text, color='green', attrs=['bold'])
 
+        if verbose:
+            #print(tp,fg,tf,bg,step_cnt,sep='\n')
+            log_print('\tTP: %.2f%%, TF: %.2f%%, fg/bg=(%d/%d)' % (tp/fg*100., tf/bg*100., fg/step_cnt, bg/step_cnt))
+            #import ipdb; ipdb.set_trace()
+            log_print('\trpn_cls: %.4f, rpn_box: %.4f, rcnn_cls: %.4f, rcnn_box: %.4f' % (
+                net.rpn.cross_entropy.data.cpu().numpy(), net.rpn.loss_box.data.cpu().numpy(),
+                net.cross_entropy.data.cpu().numpy(), net.loss_box.data.cpu().numpy())
+            )
         re_cnt = True
 
     if (step % 10000 == 0) and step > 0:

@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import torchvision.transforms as transforms
 
 import numpy as np
@@ -79,6 +80,7 @@ class FasterRCNN(nn.Module):
         weight_init(self.rcnn_bbox_fc)
 
         self.use_cuda = cfg.USE_CUDA
+        self.verbose = cfg.VERBOSE
 
         # loss
         self.rcnn_cls_loss = None
@@ -145,6 +147,33 @@ class FasterRCNN(nn.Module):
         bbox_outside_weights = array_to_tensor(bbox_outside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
         return rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights
 
+    def build_rcnn_loss(self, rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights):
+        # classification loss
+        fg_cnt = torch.sum(labels.data.ne(0)).item()
+        bg_cnt = labels.data.numel() - fg_cnt
+
+        # for log
+        if self.debug:
+            maxv, predict = cls_score.data.max(1)
+            self.tp = torch.sum(predict[:fg_cnt].eq(label.data[:fg_cnt])) if fg_cnt > 0 else 0
+            self.tf = torch.sum(predict[fg_cnt:].eq(label.data[fg_cnt:]))
+            self.fg_cnt = fg_cnt
+            self.bg_cnt = bg_cnt
+
+        # import ipdb; ipdb.set_trace()
+        ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
+        ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
+
+        labels = labels.squeeze()
+        rcnn_cross_entropy = F.cross_entropy(rcnn_cls_score, labels, weight=ce_weights.detach())
+
+        # bounding box regression L1 loss
+        bbox_targets = bbox_targets.mul(bbox_inside_weights)
+        rcnn_bbox_pred = rcnn_bbox_pred.mul(bbox_inside_weights)
+
+        rcnn_box_loss = F.smooth_l1_loss(rcnn_bbox_pred, bbox_targets, reduction='sum') / (fg_cnt + 1e-4)
+
+        return rcnn_cross_entropy, rcnn_box_loss
 
     @staticmethod
     def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score, use_nms=True, use_clip=True):

@@ -67,7 +67,6 @@ def load_pretrained_npy(vgg16, fname):
     params = np.load(fname, encoding='bytes').item()
     # vgg16
     vgg16_dict = vgg16.state_dict()
-    import ipdb; ipdb.set_trace()
     for name, val in vgg16_dict.items():
         if name.find('bn.') >= 0:
             continue
