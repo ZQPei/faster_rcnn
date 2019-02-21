@@ -70,7 +70,7 @@ class FasterRCNN(nn.Module):
         roi_pooled_size = cfg.NETWORK.ROI_POOLED_SIZE
         self.roipool_layer = RoIPool(roi_pooled_size, roi_pooled_size, 1./feature_stride)
         self.rcnn_fc = nn.Sequential(
-            FC(cfg.NETWORK.RPN_CONV_OUTCHANNELS*roi_pooled_size*roi_pooled_size, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True),
+            FC(cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS*roi_pooled_size*roi_pooled_size, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True),
             FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, cfg.NETWORK.RCNN_FC_OUTCHANNELS, dropout=True)
         )
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)   # ==> 21
