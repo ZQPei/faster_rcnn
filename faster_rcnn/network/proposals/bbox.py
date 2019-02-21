@@ -23,7 +23,7 @@ def bbox_overlaps_torch(boxes, query_boxes):
         inter = w*h
         query_box_area = (query_box[2]-query_box[0]+1)*(query_box[3]-query_box[1]+1)
         overlaps.append( inter/(query_box_area+areas-inter) )
-    overlaps = torch.cat(overlaps, dim=0).view(-1,4).t_().contiguous()
+    overlaps = torch.stack(overlaps, dim=0).t_().contiguous()
     return overlaps
 
 import numpy as np
