@@ -41,6 +41,7 @@ if cfg.USE_CUDA:
 if verbose:
     print(net)
 
+# Dont uncomment this line!!!
 # cudnn.benchmark = True
 
 # Iteration config
