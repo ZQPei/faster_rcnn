@@ -1,6 +1,6 @@
 import torch
 
-import _ext.nms._nms as nms
+import _ext.nms as nms
 from nms_gpu_torch import NMS
 
 bbox = [[[3, 3, 6, 6, 0.7, 0.8, 0.2], 
