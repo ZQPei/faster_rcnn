@@ -22,6 +22,8 @@ torch.manual_seed(rand_seed)
 
 save_model_dir = cfg.SAVE_MODEL_DIR
 
+verbose = True
+
 # Dataset imdb
 dataset_name = cfg.DATASET.NAME
 

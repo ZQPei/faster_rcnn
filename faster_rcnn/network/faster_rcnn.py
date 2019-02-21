@@ -20,7 +20,7 @@ from .roi_pooling.modules.roi_pool import RoIPool
 
 from ..loss_function.rcnn_loss import build_rcnn_loss
 
-from ..utils.timer import Timer
+from ..utils.timer import Timer, tic, toc
 from ..config import cfg
 
 class BasicNetwork(nn.Module):
@@ -99,27 +99,56 @@ class FasterRCNN(nn.Module):
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
 
+        if cfg.DEBUG:
+            tic()
+
         feature_map = self.features(im_data)
 
+        if cfg.DEBUG:
+            toc("Get feature map time:")
+
+        if cfg.DEBUG:
+            tic()
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
+
+        if cfg.DEBUG:
+            toc("Get RPN time:")
+
+        if cfg.DEBUG:
+            tic()
         if self.training:
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
+        if cfg.DEBUG:
+            toc("Get RPI POOL time:")
 
+        if cfg.DEBUG:
+            tic()
         # roi pooling
         roi_pooled_features = self.roipool_layer(feature_map, rois)
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
         x = self.rcnn_fc(x)
+        if cfg.DEBUG:
+            toc("Get ROI POOLING time:")
 
+        if cfg.DEBUG:
+            tic()
         # rcnn cls prob
         rcnn_cls_score = self.rcnn_cls_fc(x)
         rcnn_cls_prob  = F.softmax(rcnn_cls_score, dim=1)
         # rcnn bboxes
         rcnn_bbox_pred  = self.rcnn_bbox_fc(x)
+        if cfg.DEBUG:
+            toc("Get rcnn time:")
 
+
+        if cfg.DEBUG:
+            tic()
         if self.training:
             self.rcnn_cls_loss, self.rcnn_box_loss = \
                 build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
+        if cfg.DEBUG:
+            toc("Get rcnn loss time:")
 
         return rcnn_cls_prob, rcnn_bbox_pred, rois
 

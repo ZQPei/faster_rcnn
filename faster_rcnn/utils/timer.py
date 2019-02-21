@@ -30,3 +30,11 @@ class Timer(object):
             return self.average_time
         else:
             return self.diff
+
+t = Timer()
+def tic():
+    t.tic()
+
+def toc(text):
+    spend_time = t.toc(average=False)
+    print(text, spend_time)
