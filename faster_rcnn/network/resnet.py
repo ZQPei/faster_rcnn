@@ -122,7 +122,7 @@ class ResNet(nn.Module):
 
         set_trainable(self.conv1, False)
         set_trainable(self.bn1, False)
-        set_trainable(self.layer1, False)
+        # set_trainable(self.layer1, False)
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None
@@ -150,7 +150,7 @@ class ResNet(nn.Module):
         x = self.layer1(x)
         x = self.layer2(x)
         x = self.layer3(x)
-        x = self.layer4(x)
+        # x = self.layer4(x)
 
         # x = self.avgpool(x)
         # x = x.view(x.size(0), -1)

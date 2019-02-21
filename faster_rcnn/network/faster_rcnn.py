@@ -33,6 +33,9 @@ class BasicNetwork(nn.Module):
             del self.conv.classifier
         else:
             eval(cfg.NETWORK.BASIC_NETWORK)()
+            del self.conv.layer4
+            del self.conv.avgpool
+            del self.conv.fc
 
         if net_name is None:
             self.out_channels = 512
