@@ -98,8 +98,6 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     #        [ 844.,  496.,  931.,  671.],
     #        [ 800.,  408.,  975.,  759.],
     #        [ 712.,  232., 1063.,  935.]])
-    # Now convert anchors from numpy to tensor in gpu
-    anchors = torch.from_numpy(anchors).float().cuda()
 
     # Transpose and reshape predicted bbox transformations to get them
     # into the same order as the anchors:
@@ -108,14 +106,14 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     # transpose to (1, H, W, 4 * A)
     # reshape to (1 * H * W * A, 4) where rows are ordered by (h, w, a)
     # in slowest to fastest order
-    bbox_deltas = bbox_deltas.permute(0, 2, 3, 1).contiguous().view(-1, 4)
+    bbox_deltas = bbox_deltas.transpose((0, 2, 3, 1)).reshape((-1, 4))
 
     # Same story for the scores:
     #
     # scores are (1, A, H, W) format
     # transpose to (1, H, W, A)
     # reshape to (1 * H * W * A, 1) where rows are ordered by (h, w, a)
-    scores = scores.permute(0, 2, 3, 1).contiguous().view(-1, 1)
+    scores = scores.transpose((0, 2, 3, 1)).reshape((-1, 1))
 
     # Convert anchors into proposals via bbox transformations
     proposals = bbox_transform_inv(anchors, bbox_deltas)
@@ -125,33 +123,33 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
 
     # 3. remove predicted boxes with either height or width < threshold
     # (NOTE: convert min_size to input image scale stored in im_info[2])
-    proposals, scores = filter_boxes(proposals, scores, min_size*im_scale_ratio)
+    keep = filter_boxes(proposals, scores, min_size*im_scale_ratio)
+    proposals = proposals[keep, :]
+    scores = scores[keep]
 
     # 4. sort all (proposal, score) pairs by score from highest to lowest
     # 5. take top pre_nms_topN (e.g. 6000)
-    order = scores.squeeze(1).sort(descending=True)[1]
+    order = scores.ravel().argsort()[::-1]
     if pre_nms_topN > 0:
         order = order[:pre_nms_topN]
     proposals = proposals[order, :]
-    scores = scores[order, :]
+    scores = scores[order]
 
     # 6. apply nms (e.g. threshold = 0.7)
     # 7. take after_nms_topN (e.g. 300)
     # 8. return the top proposals (-> RoIs top)
     # import ipdb; ipdb.set_trace()
-    from ...utils.timer import tic, toc
-    if cfg.DEBUG:
-        tic()
+    keep = nms(np.hstack((proposals, scores)), nms_thresh)
+    if post_nms_topN > 0:
+        keep = keep[:post_nms_topN]
+    proposals = proposals[keep, :]
+    scores = scores[keep]
     # mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
 
     dets = torch.cat([proposals,scores], dim=1).cpu().numpy().astype(np.float32)
     inds = nms(dets, nms_thresh)
     inds = torch.tensor(inds).long().cuda()
     proposals = proposals[inds, :]
-    if cfg.DEBUG:
-        toc("Get rpn nms time:")
-    # proposals = proposals[mask, :]
-    # scores = scores[mask, :]
 
     return proposals
 

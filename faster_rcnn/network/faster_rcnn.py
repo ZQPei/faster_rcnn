@@ -115,7 +115,7 @@ class FasterRCNN(nn.Module):
             tic()
         if self.training:
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
-                proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
+                self.proposal_target_layer(rois, gt_boxes, gt_ishard)
         if cfg.DEBUG:
             toc("Get proposal target layer time:")
 
@@ -148,6 +148,18 @@ class FasterRCNN(nn.Module):
             toc("Get rcnn loss time:")
 
         return rcnn_cls_prob, rcnn_bbox_pred, rois
+
+    def proposal_target_layer(self, rois, gt_boxes, gt_ishard):
+        rois = tensor_to_array(rois, dtype=np.float32)
+        rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
+                proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
+        rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
+        labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.float32)
+        bbox_targets = array_to_tensor(bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
+        bbox_inside_weights = array_to_tensor(bbox_inside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
+        bbox_outside_weights = array_to_tensor(bbox_outside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
+        return rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights
+
 
     @staticmethod
     def interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, min_score, use_nms=True, use_clip=True):

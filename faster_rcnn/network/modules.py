@@ -39,12 +39,16 @@ def save_net(net, fname):
 def load_net(net, fname):
     torch.load(net, fname)
 
-def array_to_tensor(im_data, is_cuda=True, dtype=torch.FloatTensor):
-    im_data = torch.from_numpy(im_data).permute(0,3,1,2).type(dtype)
-    im_data.requires_grad = False
+def array_to_tensor(array, is_cuda=True, dtype=torch.float32):
+    tensor = torch.from_numpy(array).permute(0,3,1,2).type(dtype)
+    tensor.requires_grad = False
     if is_cuda:
-        im_data.cuda()
-    return im_data
+        tensor.cuda()
+    return tensor
+
+def tensor_to_array(tensor, dtype=np.float32):
+    array = tensor.data.cpu().numpy().astype(dtype, copy=False)
+    return array
 
 def weights_normal_init(model, devilation=0.01):
     """init the conv and bn and fc layers weights by standard devilation"""

@@ -107,7 +107,5 @@ def filter_boxes(boxes, scores, min_size):
     ws = boxes[:, 2] - boxes[:, 0] + 1
     hs = boxes[:, 3] - boxes[:, 1] + 1
 
-    mask = ((ws >= min_size)*(hs >= min_size))
-    boxes = boxes[mask, :]
-    scores = scores[mask, :]
-    return boxes, scores
+    keep = np.where((ws >= min_size) & (hs >= min_size))[0]
+    return keep

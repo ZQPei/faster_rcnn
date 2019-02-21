@@ -76,6 +76,12 @@ for step in range(start_step, end_step):
     loss = net.loss + net.rpn.loss
     train_loss = loss.item()
 
+    if verbose:
+        tp += float(net.tp)
+        tf += float(net.tf)
+        fg += net.fg_cnt
+        bg += net.bg_cnt
+
     # bachward
     optimizer.zero_grad()
     loss.backward()

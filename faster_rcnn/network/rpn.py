@@ -61,7 +61,7 @@ class RPN(nn.Module):
         if cfg.DEBUG:
             tic()
         # proposal layer to RCNN network as input
-        rois = proposal_layer(rpn_cls_prob.data, rpn_bbox_pred.data, im_info, self.training, self.feature_stride, self.anchor_scales)
+        rois = self.proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info)
 
         if cfg.DEBUG:
             toc("Get rpn proposal layer time:")
@@ -72,17 +72,11 @@ class RPN(nn.Module):
             if cfg.DEBUG:
                 tic()
             rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
-                anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, self.feature_stride, self.anchor_scales)
+                self.anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info)
             if cfg.DEBUG:
                 toc("Get anchor_target_layer time:")
 
-            rpn_labels = torch.from_numpy(rpn_labels).long()
-            rpn_bbox_targets = torch.from_numpy(rpn_bbox_targets).float()
-            rpn_bbox_inside_weights = torch.from_numpy(rpn_bbox_inside_weights).float()
-            rpn_bbox_outside_weights = torch.from_numpy(rpn_bbox_outside_weights).float()
-            if self.use_cuda:
-                rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
-                    rpn_labels.cuda(), rpn_bbox_targets.cuda(), rpn_bbox_inside_weights.cuda(), rpn_bbox_outside_weights.cuda()
+            
             if cfg.DEBUG:
                 tic()
             self.rpn_cls_loss, self.rpn_box_loss = \
@@ -99,4 +93,24 @@ class RPN(nn.Module):
         rpn_cls_prob = F.softmax(rpn_cls_score, dim=1)
         rpn_cls_prob = rpn_cls_prob.view(b, c, h, w)
         return rpn_cls_prob
+
+    def proposal_layer(self, rpn_cls_prob, rpn_bbox_pred, im_info):
+        rpn_cls_prob = tensor_to_array(rpn_cls_prob, dtype=np.float32)
+        rpn_bbox_pred = tensor_to_array(rpn_bbox_pred, dtype=np.float32)
+        proposals = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
+        rois = torch.from_numpy(proposals).float().cuda()
+        return rois.view(-1, 4)
+
+    def anchor_target_layer(self, feature_map_size, gt_boxes, gt_ishard, im_info):
+        rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
+                anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, self.feature_stride, self.anchor_scales)
+                
+        rpn_labels = array_to_tensor(rpn_labels, is_cuda=self.use_cuda, dtype=torch.long)
+        rpn_bbox_targets = array_to_tensor(rpn_bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
+        rpn_bbox_inside_weights = array_to_tensor(rpn_bbox_inside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
+        rpn_bbox_outside_weights = array_to_tensor(rpn_bbox_outside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
+        
+        return rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights
+
+
         
