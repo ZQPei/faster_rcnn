@@ -16,7 +16,7 @@ torch.manual_seed(cfg.SEED)
 if cfg.DATASET.NAME == 'Pascal_VOC':
     imdb = Pascal_VOC("trainval", "2007")
 prepare_roidb(imdb)
-data_layer = RoIDataLayer(imdb.roidb)
+data_layer = DataLayer(imdb.roidb)
 
 # network definition
 net = FasterRCNN(imdb.num_classes)
