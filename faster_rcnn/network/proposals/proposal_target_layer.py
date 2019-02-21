@@ -69,6 +69,7 @@ def proposal_target_layer(rpn_rois, gt_boxes, gt_ishard, num_classes):
     bbox_targets = bbox_targets.view(-1, num_classes * 4)
     bbox_inside_weights = bbox_inside_weights.view(-1, num_classes * 4)
 
+    import ipdb; ipdb.set_trace()
     bbox_outside_weights = torch.tensor(bbox_inside_weights > 0).float()
 
     return rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights
