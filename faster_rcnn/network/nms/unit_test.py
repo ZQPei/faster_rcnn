@@ -24,6 +24,7 @@ def test_nms():
                    [1,  0,  0,  6,  6,  0.8,  0.8,  0]]
     target_bbox = torch.Tensor(target_bbox).cuda()
 
+    import ipdb; ipdb.set_trace()
     result = nms.write_results(bbox, confidence, 2)
 
     if(result.size()[0] != target_bbox.size()[0]):
