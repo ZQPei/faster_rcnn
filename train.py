@@ -38,6 +38,8 @@ net = FasterRCNN(imdb.num_classes)
 net.train()
 if cfg.USE_CUDA:
     net.cuda()
+if verbose:
+    print(net)
 
 cudnn.benchmark = True
 
