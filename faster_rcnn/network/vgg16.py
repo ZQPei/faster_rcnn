@@ -63,7 +63,7 @@ class VGG16(nn.Module):
                 param = param.permute(3, 2, 0, 1)
             val.copy_(param)
 
-    def load_pretrained_npy(fname):
+    def load_pretrained_npy(self, fname):
         params = np.load(fname, encoding='bytes').item()
         # vgg16
         params = self.state_dict()
