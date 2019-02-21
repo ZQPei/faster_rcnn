@@ -114,7 +114,7 @@ class FasterRCNN(nn.Module):
 
         if self.training:
             self.rcnn_cls_loss, self.rcnn_box_loss = \
-                build_rcnn_loss(rcnn_cls_prob, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
+                build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
 
         return rcnn_cls_prob, rcnn_bbox_pred, rois
 
