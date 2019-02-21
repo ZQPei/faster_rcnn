@@ -142,10 +142,14 @@ def proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, is_train, feat_stride, 
     from ...utils.timer import tic, toc
     if cfg.DEBUG:
         tic()
-    mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
+    # mask = nms(torch.cat([proposals,scores], dim=1), nms_thresh)
+
+    dets = torch.cat([proposals,scores], dim=1).cpu().numpy().astype(np.float32)
+    proposals = nms(dets, nms_thresh)
+    proposals = torch.from_numpy(proposals).float().cuda()
     if cfg.DEBUG:
         toc("Get rpn nms time:")
-    proposals = proposals[mask, :]
+    # proposals = proposals[mask, :]
     # scores = scores[mask, :]
 
     return proposals
