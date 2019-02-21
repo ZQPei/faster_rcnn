@@ -91,6 +91,7 @@ for step in range(start_step, end_step):
     loss.backward()
     clip_gradient(net, 10.)
     optimizer.step()
+    lr_schedular.step()
 
     step_cnt += 1
     if step % log_interval == 0:
