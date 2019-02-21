@@ -90,7 +90,7 @@ class FasterRCNN(nn.Module):
 
     @property
     def loss(self):
-        return self.rcnn_cls_loss + self.rcnn_box_loss*10
+        return self.rcnn_cls_loss + self.rcnn_box_loss#*10
 
     @staticmethod
     def preprocess(im_data, transform=None, is_cuda=False):

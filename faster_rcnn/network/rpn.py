@@ -42,7 +42,7 @@ class RPN(nn.Module):
 
     @property
     def loss(self):
-        return self.rpn_cls_loss + self.rpn_box_loss*10
+        return self.rpn_cls_loss + self.rpn_box_loss#*10
         
     def forward(self, feature_map, im_info, gt_boxes=None, gt_ishard=None):
         
