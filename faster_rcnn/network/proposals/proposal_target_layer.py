@@ -170,7 +170,7 @@ def _get_bbox_regression_labels(bbox_target_data, num_classes):
     """
 
     clss = bbox_target_data[:, 0]
-    bbox_targets = torch.zeros((clss.size, 4 * num_classes).float())
+    bbox_targets = torch.zeros((clss.size, 4 * num_classes)).float()
     bbox_inside_weights = torch.zeros(bbox_targets.shape).float()
     if cfg.USE_CUDA:
         bbox_targets, bbox_inside_weights = bbox_targets.cuda(), bbox_inside_weights.cuda()
