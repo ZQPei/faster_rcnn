@@ -2,6 +2,7 @@ import torch.nn as nn
 import math
 import torch.utils.model_zoo as model_zoo
 
+from .modules import set_trainable
 
 __all__ = ['ResNet', 'resnet18', 'resnet34', 'resnet50', 'resnet101',
            'resnet152']
@@ -118,6 +119,10 @@ class ResNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
+
+        set_trainable(self.conv1, False)
+        set_trainable(self.bn1, False)
+        set_trainable(self.layer1, False)
 
     def _make_layer(self, block, planes, blocks, stride=1):
         downsample = None

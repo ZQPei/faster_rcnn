@@ -13,8 +13,8 @@ cfg.DEBUG = False
 cfg.USE_CUDA = True
 cfg.CUDA_VISIBLE_DEVICES = 0
 
-import torch
-cfg.DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+# import torch
+# cfg.DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # Directories of project
@@ -49,8 +49,12 @@ cfg.STD  = [0.229, 0.224, 0.225]
 cfg.NETWORK = EasyDict()
 
 # Basic Network to get feature map
-cfg.NETWORK.BASIC_NETWORK = "vgg16"
-cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS = 512
+# cfg.NETWORK.BASIC_NETWORK = "vgg16"
+# cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS = 512
+# cfg.NETWORK.RPN_CONV_OUTCHANNELS = 512
+# cfg.NETWORK.RCNN_FC_OUTCHANNELS = 4096
+cfg.NETWORK.BASIC_NETWORK = "resnet18"
+cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS = 1024
 cfg.NETWORK.RPN_CONV_OUTCHANNELS = 512
 cfg.NETWORK.RCNN_FC_OUTCHANNELS = 4096
 

@@ -93,4 +93,8 @@ def weights_normal_init_kaiming(model, devilation=0.01):
                     m.bias.data.zero_()
 
 
-weight_init = weights_normal_init_kaiming
+weight_init = weights_normal_init
+
+def set_trainable(model, requires_grad):
+    for param in model.parameters():
+        param.requires_grad = requires_grad
