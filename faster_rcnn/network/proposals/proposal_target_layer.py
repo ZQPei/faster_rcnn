@@ -129,7 +129,7 @@ def _sample_rois(all_rois, gt_boxes, gt_ishard, fg_rois_per_image, rois_per_imag
     rois = all_rois[keep_inds]
 
     bbox_target_data = _compute_targets(
-        rois[:, 1:5], gt_boxes[gt_assignment[keep_inds], :4], labels)
+        rois, gt_boxes[gt_assignment[keep_inds], :4], labels)
 
     # bbox_target_data (1 x H x W x A, 5)
     # bbox_targets <- (1 x H x W x A, K x 4)
