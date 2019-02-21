@@ -9,7 +9,6 @@ def build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, 
     ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
     ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
 
-    
     labels = labels.squeeze()
     rcnn_cross_entropy = F.cross_entropy(rcnn_cls_score, labels, weight=ce_weights.detach())
 

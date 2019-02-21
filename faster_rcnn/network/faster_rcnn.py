@@ -154,7 +154,7 @@ class FasterRCNN(nn.Module):
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
         rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
-        labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.float32)
+        labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.long)
         bbox_targets = array_to_tensor(bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
         bbox_inside_weights = array_to_tensor(bbox_inside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
         bbox_outside_weights = array_to_tensor(bbox_outside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
