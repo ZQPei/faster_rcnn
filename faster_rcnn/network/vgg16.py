@@ -69,7 +69,7 @@ def load_pretrained_npy(vgg16, fname):
     vgg16_dict = vgg16.state_dict()
     import ipdb; ipdb.set_trace()
     for name, val in vgg16_dict.items():
-        if name.find(b'bn.') >= 0:
+        if name.find('bn.') >= 0:
             continue
         i, j = int(name[4]), int(name[6]) + 1
         ptype = b'weights' if name[-1] == 't' else b'biases'
