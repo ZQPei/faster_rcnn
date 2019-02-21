@@ -116,6 +116,7 @@ for step in range(start_step, end_step):
         print('save model: {}'.format(save_name))
 
     if re_cnt:
+        tp, tf, fg, bg = 0., 0., 0, 0
         train_loss = 0
         step_cnt = 0
         t.tic()
