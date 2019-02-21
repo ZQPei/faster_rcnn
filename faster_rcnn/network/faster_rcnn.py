@@ -109,7 +109,7 @@ class FasterRCNN(nn.Module):
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
     
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
