@@ -11,7 +11,6 @@ def bbox_overlaps_torch(boxes, query_boxes):
     overlaps: (N, K) torch tensor of overlap between boxes and query_boxes
     """
     overlaps = []
-    import ipdb; ipdb.set_trace()
     areas = (boxes[:,2]-boxes[:,0]+1)*(boxes[:,3]-boxes[:,1]+1)
     for query_box in query_boxes:
         xx1 = torch.max(query_box[0], boxes[:,0])
