@@ -77,10 +77,11 @@ for step in range(start_step, end_step):
     train_loss = loss.item()
 
     if verbose:
-        tp += float(net.tp)
-        tf += float(net.tf)
-        fg += net.fg_cnt
-        bg += net.bg_cnt
+        # tp += float(net.tp)
+        # tf += float(net.tf)
+        # fg += net.fg_cnt
+        # bg += net.bg_cnt
+        pass
 
     # bachward
     optimizer.zero_grad()
