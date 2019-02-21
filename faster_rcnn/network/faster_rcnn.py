@@ -165,7 +165,7 @@ class FasterRCNN(nn.Module):
         ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
 
         labels = labels.squeeze()
-        rcnn_cross_entropy = F.cross_entropy(rcnn_cls_score, labels, weight=ce_weights.detach())
+        rcnn_cross_entropy = F.cross_entropy(rcnn_cls_score, labels, weight=ce_weights.data)
 
         # bounding box regression L1 loss
         bbox_targets = bbox_targets.mul(bbox_inside_weights)
