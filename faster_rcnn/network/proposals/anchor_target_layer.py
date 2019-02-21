@@ -138,7 +138,7 @@ def anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info, feat_str
             bg_inds, size=(len(bg_inds) - num_bg), replace=False)
         labels[disable_inds] = -1
 
-    import ipdb; ipdb.set_trace()
+    # import ipdb; ipdb.set_trace()
     bbox_targets = _compute_targets(anchors, gt_boxes[argmax_overlaps, :])
 
     bbox_inside_weights = np.zeros((len(inds_inside), 4), dtype=np.float32)

@@ -88,6 +88,10 @@ cfg.TRAIN.IMS_PER_BATCH = 1
 assert cfg.TRAIN.HAS_RPN and cfg.TRAIN.IMS_PER_BATCH is 1, "Single batch only when has RPN"
 # Minibatch size (number of regions of interest [ROIs])  --> minibatch is a batch contained of RoIs
 cfg.TRAIN.BATCH_SIZE = 128
+# Fraction of minibatch that is labeled foreground (i.e. class > 0)
+cfg.TRAIN.FG_FRACTION = 0.25
+# Overlap threshold for a ROI to be considered foreground (if >= FG_THRESH)
+cfg.TRAIN.FG_THRESH = 0.5
 
 # RPN 
 cfg.TRAIN.RPN_BATCH_SIZE = 256
