@@ -11,6 +11,7 @@ cfg.SEED = 1024
 cfg.USE_CUDA = True
 cfg.CUDA_VISIBLE_DEVICES = 0
 
+
 # Directories of project
 cfg.SPECIFIC_NAME = "voc_resnet_0218"
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
@@ -76,6 +77,21 @@ cfg.NETWORK.ROI_POOLED_SIZE = 7
 # During train phase ================================================================================
 cfg.TRAIN = EasyDict() 
 
+# Config
+cfg.TRAIN.START_STEP = 0
+cfg.TRAIN.END_STEP = 100000
+cfg.TRAIN.MILESTONE = [5011, 20000, 60000]
+cfg.TRAIN.OPTIMIZER = 'SGD'
+cfg.TRAIN.LEARNING_RATE = 1.0
+cfg.TRAIN.LEARNING_RATE_DECAY = 0.2
+cfg.TRAIN.MOMENTUM = 0.9
+cfg.TRAIN.WEIGHT_DECAY = 5e-4
+cfg.TRAIN.DAMPENING = 0
+cfg.TRAIN.LOG_INTERVAL = 10
+cfg.TRAIN.GAMMA = 0.2
+
+
+
 # Scales to use during training (can list multiple scales)
 # Each scale is the pixel size of an image's shortest side
 cfg.TRAIN.SCALE = 600
@@ -89,7 +105,7 @@ assert cfg.TRAIN.HAS_RPN and cfg.TRAIN.IMS_PER_BATCH is 1, "Single batch only wh
 # Minibatch size (number of regions of interest [ROIs])  --> minibatch is a batch contained of RoIs
 cfg.TRAIN.BATCH_SIZE = 128
 # Fraction of minibatch that is labeled foreground (i.e. class > 0)
-cfg.TRAIN.FG_FRACTION = 0.25
+cfg.TRAIN.FG_FRACTION = 0.3
 # Overlap threshold for a ROI to be considered foreground (if >= FG_THRESH)
 cfg.TRAIN.FG_THRESH = 0.5
 
