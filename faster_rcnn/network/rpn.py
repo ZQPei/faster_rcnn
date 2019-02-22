@@ -37,8 +37,8 @@ class RPN(nn.Module):
         self.use_cuda = cfg.USE_CUDA
 
         # loss
-        self.rpn_cls_loss = 0
-        self.rpn_box_loss = 0
+        self.rpn_cls_loss = None
+        self.rpn_box_loss = None
 
     @property
     def loss(self):
@@ -60,7 +60,7 @@ class RPN(nn.Module):
         rois = self.proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info)
 
         # generating training labels and build the rpn loss
-        if self.training and None:
+        if self.training:
             feature_map_size = list(feature_map.data.shape[-2:])
             rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \
                 self.anchor_target_layer(feature_map_size, gt_boxes, gt_ishard, im_info)

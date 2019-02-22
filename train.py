@@ -78,7 +78,8 @@ for step in range(start_step, end_step):
     # forward
     net(im_data, im_info, gt_boxes, gt_ishard)
 
-    loss = net.loss + net.rpn.loss
+    # loss = net.loss + net.rpn.loss
+    loss = net.rpn.loss
     train_loss += loss.item()
 
     if verbose:
