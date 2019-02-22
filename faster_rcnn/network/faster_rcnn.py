@@ -134,9 +134,9 @@ class FasterRCNN(nn.Module):
         # rcnn bboxes
         rcnn_bbox_pred  = self.rcnn_bbox_fc(x)
         
-        if self.training and None:
+        if self.training:
             self.rcnn_cls_loss, self.rcnn_box_loss = \
-                self.build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
+                self.build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
 
         return rcnn_cls_prob, rcnn_bbox_pred, rois
 
@@ -152,7 +152,7 @@ class FasterRCNN(nn.Module):
         bbox_outside_weights = array_to_tensor(bbox_outside_weights, is_cuda=self.use_cuda, dtype=torch.float32)
         return rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights
 
-    def build_rcnn_loss(self, rcnn_cls_score, rcnn_bbox_pred, rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights):
+    def build_rcnn_loss(self, rcnn_cls_score, rcnn_bbox_pred, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights):
         labels = labels.squeeze()
         # classification loss
         fg_cnt = torch.sum(labels.data.ne(0)).item()
@@ -166,7 +166,7 @@ class FasterRCNN(nn.Module):
             self.fg_cnt = fg_cnt
             self.bg_cnt = bg_cnt
 
-        # import ipdb; ipdb.set_trace()
+        import ipdb; ipdb.set_trace()
         ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
         ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
 

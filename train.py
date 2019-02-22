@@ -78,8 +78,7 @@ for step in range(start_step, end_step):
     # forward
     net(im_data, im_info, gt_boxes, gt_ishard)
 
-    # loss = net.loss + net.rpn.loss
-    loss = net.rpn.loss
+    loss = net.loss + net.rpn.loss
     train_loss += loss.item()
 
     if verbose:
@@ -91,7 +90,7 @@ for step in range(start_step, end_step):
     # bachward
     optimizer.zero_grad()
     loss.backward()
-    # clip_gradient(net, 10.)
+    clip_gradient(net, 10.)
     optimizer.step()
     lr_schedular.step()
 
