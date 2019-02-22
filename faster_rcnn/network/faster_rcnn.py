@@ -120,7 +120,7 @@ class FasterRCNN(nn.Module):
 
         if self.training:
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
-                self.proposal_target_layer(rois, gt_boxes, gt_ishard)
+                self.proposal_target_layer(rois.data, gt_boxes, gt_ishard)
         
         # roi pooling
         roi_pooled_features = self.roipool_layer(feature_map, rois)

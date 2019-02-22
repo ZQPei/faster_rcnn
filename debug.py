@@ -37,7 +37,7 @@ im = cv2.imread("img/test.jpg")
 im_rgb = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
 im_data, im_scale_ratio = preprocess(im_rgb)
 im_info = np.array([*im_data.shape[:2], im_scale_ratio])
-net.eval()
+# net.eval()
 dets, scores, classes = net.detect(im_data, im_info)
 
 print(dets)
