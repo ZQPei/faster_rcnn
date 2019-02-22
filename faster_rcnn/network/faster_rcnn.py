@@ -143,7 +143,7 @@ class FasterRCNN(nn.Module):
     def proposal_target_layer(self, rois, gt_boxes, gt_ishard):
         rois = tensor_to_array(rois, dtype=np.float32)#[:,1:]
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
-                proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
+                proposal_target_layer(rois[:,1:], gt_boxes, gt_ishard, self.num_classes)
         # rois = np.hstack([np.zeros((rois.shape[0],1),dtype=np.float32), rois])
         rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
         labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.long)
