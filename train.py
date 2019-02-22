@@ -115,7 +115,7 @@ for step in range(start_step, end_step):
 
     if (step % 10000 == 0) and step > 0:
         save_name = os.path.join(save_model_dir, 'faster_rcnn_{}.pkl'.format(step))
-        save_net(save_name, net)
+        save_net(net, save_name)
         print('save model: {}'.format(save_name))
 
     if re_cnt:
