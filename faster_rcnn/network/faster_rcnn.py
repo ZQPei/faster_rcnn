@@ -116,6 +116,7 @@ class FasterRCNN(nn.Module):
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
+        import ipdb; ipdb.set_trace()
 
         if self.training:
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
