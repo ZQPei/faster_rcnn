@@ -40,6 +40,8 @@ im_info = np.array([*im_data.shape[:2], im_scale_ratio])
 net.eval()
 dets, scores, classes = net.detect(im_data, im_info)
 
+print(dets)
+
 for i, det in enumerate(dets):
     det = tuple(int(x) for x in det)
     cv2.rectangle(im, det[0:2], det[2:4], (255, 205, 51), 2)
