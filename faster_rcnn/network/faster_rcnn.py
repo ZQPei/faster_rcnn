@@ -211,7 +211,7 @@ class FasterRCNN(nn.Module):
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
         if use_nms and pred_boxes.shape[0]>0:
-            nms_keep = nms(np.hstack([pred_boxes, scores.reshape(-1,1)]), threshold=cfg.TEST.RCNN_NMS_THRESH)
+            nms_keep = nms(np.hstack([pred_boxes, scores.reshape(-1,1)]), cfg.TEST.RCNN_NMS_THRESH)
             pred_boxes = pred_boxes[nms_keep,:]
             scores = scores[nms_keep]
             cls_inds = cls_inds[nms_keep]
