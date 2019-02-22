@@ -110,6 +110,7 @@ class FasterRCNN(nn.Module):
         return im_data
 
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
+        import ipdb; ipdb.set_trace()
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
     
         # import ipdb; ipdb.set_trace()
