@@ -188,10 +188,11 @@ class FasterRCNN(nn.Module):
         """
         # import ipdb; ipdb.set_trace()
         # filter bg cls and scores smaller than min_score
-        scores, cls_inds = rcnn_cls_prob.max(1)
+        scores = rcnn_cls_prob.max(1)
+        cls_inds = rcnn_cls_prob.argmax(1)
 
         keep = np.where((cls_inds > 0) & (scores >= min_score))
-        scores, inds = scores[keep], inds[keep]
+        scores, inds = scores[keep], cls_inds[keep]
 
         # Apply bounding-box regression deltas
         keep = keep[0]
