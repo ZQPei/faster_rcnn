@@ -66,7 +66,7 @@ class FasterRCNN(nn.Module):
             load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
             self.out_channels = 512
         else:
-            self.features = resnet50(pretrained=True)
+            self.features = eval(cfg.NETWORK.BASIC_NETWORK)(pretrained=True)
             del self.features.layer4
             del self.features.avgpool
             del self.features.fc
