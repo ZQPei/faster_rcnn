@@ -10,6 +10,8 @@ cfg.SEED = 1024
 cfg.DEBUG = False
 cfg.VERBOSE = True
 
+cfg.OFFICIAL = False
+
 # CUDA config
 cfg.USE_CUDA = True
 cfg.CUDA_VISIBLE_DEVICES = 0

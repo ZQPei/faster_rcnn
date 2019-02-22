@@ -61,10 +61,16 @@ class FasterRCNN(nn.Module):
 
         # self.features = BasicNetwork(net_name=cfg.NETWORK.BASIC_NETWORK)
 
-        self.features = VGG16(bn=False)
-        load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
-
-        self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
+        if cfg.OFFICIAL:
+            self.features = VGG16(bn=False)
+            load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
+            self.out_channels = 512
+        else:
+            self.features = resnet18(pretrained=True)
+            del self.features.layer4
+            del self.features.avgpool
+            del self.features.fc
+            self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 
 
         self.rpn = RPN(self.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
@@ -77,9 +83,9 @@ class FasterRCNN(nn.Module):
         )
         self.rcnn_cls_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes, relu=False)   # ==> 21
         self.rcnn_bbox_fc = FC(cfg.NETWORK.RCNN_FC_OUTCHANNELS, self.num_classes * 4, relu=False)# ==> 21*4 = 84
-        # weight_init(self.rcnn_fc)
-        # weight_init(self.rcnn_cls_fc)
-        # weight_init(self.rcnn_bbox_fc)
+        weight_init(self.rcnn_fc)
+        weight_init(self.rcnn_cls_fc)
+        weight_init(self.rcnn_bbox_fc)
 
         self.use_cuda = cfg.USE_CUDA
         self.verbose = cfg.VERBOSE
@@ -110,7 +116,8 @@ class FasterRCNN(nn.Module):
         return im_data
 
     def forward(self, im_data, im_info, gt_boxes=None, gt_ishard=None):
-        im_data = im_data[:,:,::-1]
+        if cfg.OFFICIAL:
+            im_data = im_data[:,:,::-1]
         im_data = self.preprocess(im_data, transform=self._normalize, is_cuda=self.use_cuda)
     
         # import ipdb; ipdb.set_trace()
