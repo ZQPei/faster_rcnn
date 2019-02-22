@@ -117,14 +117,14 @@ class FasterRCNN(nn.Module):
         feature_map = self.features(im_data)
 
         rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard) # 300 x 5 to fit roi pooling
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
 
         if self.training:
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 self.proposal_target_layer(rois.data, gt_boxes, gt_ishard)
         
         # roi pooling
-        roi_pooled_features = self.roipool_layer(feature_map, rois) 
+        roi_pooled_features = self.roipool_layer(feature_map, rois) # rois shape 300 x 5 to fit roi pooling
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
         x = self.rcnn_fc(x)
         
