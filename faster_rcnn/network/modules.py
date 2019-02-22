@@ -25,7 +25,7 @@ class FC(nn.Module):
         super(FC, self).__init__()
         self.fc = nn.Linear(in_features, out_features, bias=True)
         self.relu = nn.ReLU(inplace=True) if relu else None
-        self.dropout = nn.Dropout(p=0.5, inplace=True) if dropout else None
+        self.dropout = nn.Dropout(p=0.5, inplace=False) if dropout else None # inplace must be False Here!!!
 
     def forward(self, x):
         x = self.fc(x)
