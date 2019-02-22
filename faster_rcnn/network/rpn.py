@@ -83,8 +83,9 @@ class RPN(nn.Module):
         rpn_cls_prob = tensor_to_array(rpn_cls_prob, dtype=np.float32)
         rpn_bbox_pred = tensor_to_array(rpn_bbox_pred, dtype=np.float32)
         proposals = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
+        proposals = np.hstack([np.zeros((proposals.shape[0],),dtype=np.float32), proposals])
         rois = torch.from_numpy(proposals).float().cuda()
-        return rois.view(-1, 4)
+        return rois.view(-1, 5)
 
     def anchor_target_layer(self, feature_map_size, gt_boxes, gt_ishard, im_info):
         rpn_labels, rpn_bbox_targets, rpn_bbox_inside_weights, rpn_bbox_outside_weights = \

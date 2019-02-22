@@ -116,7 +116,7 @@ class FasterRCNN(nn.Module):
         # import ipdb; ipdb.set_trace()
         feature_map = self.features(im_data)
 
-        rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard)
+        rois = self.rpn(feature_map, im_info, gt_boxes, gt_ishard) # 300 x 5 to fit roi pooling
         import ipdb; ipdb.set_trace()
 
         if self.training:
@@ -124,7 +124,7 @@ class FasterRCNN(nn.Module):
                 self.proposal_target_layer(rois.data, gt_boxes, gt_ishard)
         
         # roi pooling
-        roi_pooled_features = self.roipool_layer(feature_map, rois)
+        roi_pooled_features = self.roipool_layer(feature_map, rois) 
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
         x = self.rcnn_fc(x)
         
@@ -141,9 +141,10 @@ class FasterRCNN(nn.Module):
         return rcnn_cls_prob, rcnn_bbox_pred, rois
 
     def proposal_target_layer(self, rois, gt_boxes, gt_ishard):
-        rois = tensor_to_array(rois, dtype=np.float32)
+        rois = tensor_to_array(rois, dtype=np.float32)[:,1:]
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
+        rois = np.hstack([np.zeros((rois.shape[0],),dtype=np.float32), rois])
         rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
         labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.long)
         bbox_targets = array_to_tensor(bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
