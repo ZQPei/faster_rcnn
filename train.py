@@ -57,7 +57,7 @@ dampening = cfg.TRAIN.DAMPENING
 log_interval = cfg.TRAIN.LOG_INTERVAL
 
 # Optimizer
-params = net.parameters()[8:]
+params = list(net.parameters())[8:]
 optimizer = torch.optim.SGD(params, lr, momentum=momentum, weight_decay=weight_decay, dampening=dampening)
 lr_schedular = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=gamma, last_epoch=start_step-1)
 
