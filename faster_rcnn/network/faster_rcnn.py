@@ -122,7 +122,6 @@ class FasterRCNN(nn.Module):
             rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 self.proposal_target_layer(rois.data, gt_boxes, gt_ishard)
         
-        import ipdb; ipdb.set_trace()
         # roi pooling
         roi_pooled_features = self.roipool_layer(feature_map, rois) # rois shape 300 x 5 to fit roi pooling
         x = roi_pooled_features.view(roi_pooled_features.size(0), -1)
@@ -145,7 +144,6 @@ class FasterRCNN(nn.Module):
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois[:,1:], gt_boxes, gt_ishard, self.num_classes)
         rois = np.hstack([np.zeros((rois.shape[0],1),dtype=np.float32), rois])
-        rois = np.ascontiguousarray(rois)
         rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
         labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.long)
         bbox_targets = array_to_tensor(bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
@@ -167,7 +165,6 @@ class FasterRCNN(nn.Module):
             self.fg_cnt = fg_cnt
             self.bg_cnt = bg_cnt
 
-        import ipdb; ipdb.set_trace()
         ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
         ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
 

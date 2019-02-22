@@ -84,7 +84,6 @@ class RPN(nn.Module):
         rpn_bbox_pred = tensor_to_array(rpn_bbox_pred, dtype=np.float32)
         proposals = proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info, self.training, self.feature_stride, self.anchor_scales)
         proposals = np.hstack([np.zeros((proposals.shape[0],1),dtype=np.float32), proposals])
-        proposals = np.ascontiguousarray(proposals)
         rois = torch.from_numpy(proposals).float().cuda()
         return rois.view(-1, 5)
 
