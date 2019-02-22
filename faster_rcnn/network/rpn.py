@@ -30,9 +30,9 @@ class RPN(nn.Module):
         self.num_anchors = cfg.NETWORK.NUM_ANCHORS
         self.cls_conv = Conv2d(out_channels, self.num_anchors*2, 1, relu=False, same_padding=False)
         self.bbox_conv  = Conv2d(out_channels, self.num_anchors*4, 1, relu=False, same_padding=False)
-        weight_init(self.conv)
-        weight_init(self.cls_conv)
-        weight_init(self.bbox_conv)
+        # weight_init(self.conv)
+        # weight_init(self.cls_conv)
+        # weight_init(self.bbox_conv)
 
         self.use_cuda = cfg.USE_CUDA
 
