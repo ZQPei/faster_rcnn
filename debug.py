@@ -45,6 +45,7 @@ for i, det in enumerate(dets):
     cv2.rectangle(im, det[0:2], det[2:4], (255, 205, 51), 2)
     cv2.putText(im, '%s: %.3f' % (classes[i], scores[i]), (det[0], det[1] + 15), cv2.FONT_HERSHEY_PLAIN,
                 1.0, (0, 0, 255), thickness=1)
+cv2.imwrite('demo/out.jpg',im)
 cv2.imshow('demo', im)
 cv2.waitKey(0)
 
