@@ -72,7 +72,6 @@ class FasterRCNN(nn.Module):
             del self.features.fc
             self.out_channels = cfg.NETWORK.BASIC_NETWORK_OUTCHANNELS
 
-
         self.rpn = RPN(self.out_channels, cfg.NETWORK.RPN_CONV_OUTCHANNELS)
         feature_stride = cfg.NETWORK.FEATURE_STRIDE # <== feature stride
         roi_pooled_size = cfg.NETWORK.ROI_POOLED_SIZE
@@ -106,7 +105,9 @@ class FasterRCNN(nn.Module):
         Return:
             Normalized im_data: 1xCxHxW, torch.tensor
         """
-        im_data = (im_data).astype(np.float32)#/255
+        im_data = (im_data).astype(np.float32)
+        if not cfg.OFFICIAL:
+            im_data = im_data/255
         im_data = torch.from_numpy(im_data).permute(2,0,1)
         if transform is not None:
             im_data = transform(im_data)
