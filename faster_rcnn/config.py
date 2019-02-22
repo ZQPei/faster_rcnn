@@ -10,7 +10,7 @@ cfg.SEED = 1024
 cfg.DEBUG = False
 cfg.VERBOSE = True
 
-cfg.OFFICIAL = True
+
 
 # CUDA config
 cfg.USE_CUDA = True
@@ -55,6 +55,8 @@ else:
 
 # Network config ==============================================================================
 cfg.NETWORK = EasyDict()
+
+cfg.OFFICIAL = True
 
 # Basic Network to get feature map
 # cfg.NETWORK.BASIC_NETWORK = "vgg16"
