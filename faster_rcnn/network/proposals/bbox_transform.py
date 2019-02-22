@@ -54,6 +54,18 @@ def bbox_transform_torch(ex_rois, gt_rois):
     return targets
 
 def bbox_transform_inv_np(boxes, deltas):
+    """
+    Input:
+        boxes shape: (N, 4) float32
+        deltas shape: (N, 4) float32
+
+        pred_cx = cx + dx*w
+        pred_cy = cy + dy*h
+        pred_w  = w + exp(dw)
+        pred_h  = h + exp(dh)
+    Return:
+        pred boxes
+    """
     if boxes.shape[0] == 0:
         return np.zeros((0,), dtype=deltas.dtype)
 
