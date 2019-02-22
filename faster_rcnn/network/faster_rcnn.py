@@ -66,7 +66,7 @@ class FasterRCNN(nn.Module):
             load_pretrained_npy(self.features, 'models/VGG_imagenet.npy')
             self.out_channels = 512
         else:
-            self.features = resnet18(pretrained=True)
+            self.features = resnet50(pretrained=True)
             del self.features.layer4
             del self.features.avgpool
             del self.features.fc
@@ -105,9 +105,10 @@ class FasterRCNN(nn.Module):
         Return:
             Normalized im_data: 1xCxHxW, torch.tensor
         """
-        im_data = (im_data).astype(np.float32)
-        if not cfg.OFFICIAL:
-            im_data = im_data/255
+        if cfg.OFFICIAL:
+            im_data = im_data.astype(np.float32)
+        else:
+            im_data = im_data.astype(np.float32)/255
         im_data = torch.from_numpy(im_data).permute(2,0,1)
         if transform is not None:
             im_data = transform(im_data)
