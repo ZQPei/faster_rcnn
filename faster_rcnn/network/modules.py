@@ -24,15 +24,15 @@ class FC(nn.Module):
     def __init__(self, in_features, out_features, relu=True, dropout=False):
         super(FC, self).__init__()
         self.fc = nn.Linear(in_features, out_features, bias=True)
-        self.dropout = nn.Dropout(p=0.5, inplace=True) if dropout else None
         self.relu = nn.ReLU(inplace=True) if relu else None
+        self.dropout = nn.Dropout(p=0.5, inplace=True) if dropout else None
 
     def forward(self, x):
         x = self.fc(x)
-        if self.training and self.dropout is not None:
-            x = self.dropout(x)
         if self.relu is not None:
             x = self.relu(x)
+        if self.training and self.dropout is not None:
+            x = self.dropout(x)
         return x
 
 def save_net(net, fname):
