@@ -145,6 +145,7 @@ class FasterRCNN(nn.Module):
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois[:,1:], gt_boxes, gt_ishard, self.num_classes)
         rois = np.hstack([np.zeros((rois.shape[0],1),dtype=np.float32), rois])
+        rois = np.ascontiguousarray(rois)
         rois = array_to_tensor(rois, is_cuda=self.use_cuda, dtype=torch.float32)
         labels = array_to_tensor(labels, is_cuda=self.use_cuda, dtype=torch.long)
         bbox_targets = array_to_tensor(bbox_targets, is_cuda=self.use_cuda, dtype=torch.float32)
@@ -170,7 +171,6 @@ class FasterRCNN(nn.Module):
         ce_weights = torch.ones_like(rcnn_cls_score[0]).float()
         ce_weights[0] = (1. *fg_cnt / bg_cnt) if bg_cnt is not 0 else 1.
 
-        labels = labels.squeeze()
         rcnn_cross_entropy = F.cross_entropy(rcnn_cls_score, labels, weight=ce_weights.data)
 
         # bounding box regression L1 loss
