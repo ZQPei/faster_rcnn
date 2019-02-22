@@ -91,7 +91,7 @@ for step in range(start_step, end_step):
     # bachward
     optimizer.zero_grad()
     loss.backward()
-    clip_gradient(net, 10.)
+    # clip_gradient(net, 10.)
     optimizer.step()
     lr_schedular.step()
 
