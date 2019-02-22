@@ -192,7 +192,7 @@ class FasterRCNN(nn.Module):
         cls_inds = rcnn_cls_prob.argmax(1)
 
         keep = np.where((cls_inds > 0) & (scores >= min_score))
-        scores, inds = scores[keep], cls_inds[keep]
+        scores, cls_inds = scores[keep], cls_inds[keep]
 
         # Apply bounding-box regression deltas
         keep = keep[0]
