@@ -13,7 +13,7 @@ from .vgg16 import VGG16, load_pretrained_npy
 from .rpn import RPN
 
 from .proposals.proposal_target_layer import proposal_target_layer
-from .proposals.bbox_transform import bbox_transform_inv, clip_boxes
+from .proposals.bbox_transform import bbox_transform_inv_torch, clip_boxes
 
 from .nms import nms
 
@@ -202,7 +202,7 @@ class FasterRCNN(nn.Module):
         box_deltas = torch.stack([
             box_deltas[i, cls_inds[i]*4 : cls_inds[i]*4+4] for i in range(cls_inds.shape[0])
         ], dim=0)
-        pred_boxes = bbox_transform_inv(boxes, box_deltas)
+        pred_boxes = bbox_transform_inv_torch(boxes, box_deltas)
         if use_clip:
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
