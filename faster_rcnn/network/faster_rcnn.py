@@ -141,7 +141,7 @@ class FasterRCNN(nn.Module):
         return rcnn_cls_prob, rcnn_bbox_pred, rois
 
     def proposal_target_layer(self, rois, gt_boxes, gt_ishard):
-        # rois = tensor_to_array(rois, dtype=np.float32)[:,1:]
+        rois = tensor_to_array(rois, dtype=np.float32)#[:,1:]
         rois, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights = \
                 proposal_target_layer(rois, gt_boxes, gt_ishard, self.num_classes)
         # rois = np.hstack([np.zeros((rois.shape[0],1),dtype=np.float32), rois])
