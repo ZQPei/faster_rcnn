@@ -13,7 +13,7 @@ from .vgg16 import VGG16, load_pretrained_npy
 from .rpn import RPN
 
 from .proposals.proposal_target_layer import proposal_target_layer
-from .proposals.bbox_transform import bbox_transform_inv_torch, clip_boxes
+from .proposals.bbox_transform import bbox_transform_inv, clip_boxes
 
 from .nms import nms
 
@@ -189,28 +189,31 @@ class FasterRCNN(nn.Module):
         # import ipdb; ipdb.set_trace()
         # filter bg cls and scores smaller than min_score
         scores, cls_inds = rcnn_cls_prob.max(1)
-        mask = (cls_inds>0)*(scores>=min_score)
-        scores = scores[mask]
-        cls_inds = cls_inds[mask]
-        box_deltas = rcnn_bbox_pred[mask, :]
+
+        keep = np.where((cls_inds > 0) & (scores >= min_score))
+        scores, inds = scores[keep], inds[keep]
+
+        # Apply bounding-box regression deltas
+        keep = keep[0]
+        box_deltas = rcnn_bbox_pred[keep, :]
         im_height, im_width, im_scale_ratio = im_info.data
-        boxes = rois[mask, :]/im_scale_ratio
+        boxes = rois[keep, :]/im_scale_ratio
 
         if cls_inds.shape[0]==0:
             return boxes, scores, cls_inds
         # do bbox transform
-        box_deltas = torch.stack([
+        box_deltas = np.stack([
             box_deltas[i, cls_inds[i]*4 : cls_inds[i]*4+4] for i in range(cls_inds.shape[0])
-        ], dim=0)
-        pred_boxes = bbox_transform_inv_torch(boxes, box_deltas)
+        ], axis=0)
+        pred_boxes = bbox_transform_inv(boxes, box_deltas)
         if use_clip:
             pred_boxes = clip_boxes(pred_boxes, im_width, im_height)
 
         if use_nms and pred_boxes.shape[0]>0:
-            nms_mask = nms(torch.cat([pred_boxes, scores.view(-1,1)], dim=1), threshold=cfg.TEST.RCNN_NMS_THRESH)
-            pred_boxes = pred_boxes[nms_mask,:]
-            scores = scores[nms_mask]
-            cls_inds = cls_inds[nms_mask]
+            nms_keep = nms(np.hstack([pred_boxes, scores.reshape(-1,1)]), threshold=cfg.TEST.RCNN_NMS_THRESH)
+            pred_boxes = pred_boxes[nms_keep,:]
+            scores = scores[nms_keep]
+            cls_inds = cls_inds[nms_keep]
 
         return pred_boxes, scores, cls_inds
 
@@ -225,9 +228,9 @@ class FasterRCNN(nn.Module):
             prob_boxes, scores, cls_inds
         """
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
-        rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu(), rcnn_bbox_pred.data.cpu(), rois.data.cpu()
+        rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu().numpy(), rcnn_bbox_pred.data.cpu().numpy(), rois.data.cpu().numpy()
         prob_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, score_thresh)
-        prob_boxes, scores, cls_inds = (prob_boxes/im_info[2]).numpy(), scores.numpy(), cls_inds.numpy()
+        prob_boxes = prob_boxes/im_info[2]
         return prob_boxes, scores, cls_inds
 
         
