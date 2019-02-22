@@ -87,6 +87,7 @@ for step in range(start_step, end_step):
         fg += net.fg_cnt
         bg += net.bg_cnt
 
+    import ipdb; ipdb.set_trace()
     # bachward
     optimizer.zero_grad()
     loss.backward()
