@@ -31,7 +31,7 @@ with torch.no_grad():
     for image_name in image_files:
         print(image_name)
         im = PIL.Image.open(image_name)
-        im = np.array(im)[:,:,::-1]
+        im = np.array(im)
         im_data, im_scale = preprocess(im)
         im_info = np.array([*im_data.shape[:2], im_scale])
         
