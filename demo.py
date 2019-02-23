@@ -39,7 +39,7 @@ for image_name in image_files:
     bboxes, scores, cls_inds = net.detect(im_data, im_info, demo_thresh)
     runtime = t.toc(average=False)
 
-    print('total spend: {}s'.format(runtime), dets)
+    print('total spend: {}s'.format(runtime))
     cls_str = [cfg.DATASET.CLASSES[x] for x in cls_inds]
     im2show = draw_bbox(im, bboxes, scores, cls_str, im_color_mode='RGB')
 
