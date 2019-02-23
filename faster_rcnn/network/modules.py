@@ -39,8 +39,7 @@ def save_net(net, fname):
     torch.save(net, fname)
 
 def load_net(fname):
-    torch.load(fname)
-    return net
+    return torch.load(fname)
 
 def array_to_tensor(x, is_cuda=True, dtype=torch.float32):
     x = torch.from_numpy(x).type(dtype).data
