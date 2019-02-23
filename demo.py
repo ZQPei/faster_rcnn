@@ -28,6 +28,7 @@ image_files = [os.path.join(demo_image_dir,x)
                 for x in os.listdir(demo_image_dir) if x[-4:] is '.jpg']
 
 for image_name in image_files:
+    print(image_name)
     im = PIL.Image.open(image_name)
     im = np.array(im)
     im_data, im_scale = preprocess(im)
