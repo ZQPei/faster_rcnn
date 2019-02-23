@@ -61,7 +61,7 @@ lr /= 0.01
 # Optimizer
 params = list(net.parameters())[8:]
 optimizer = torch.optim.SGD(params, lr, momentum=momentum, weight_decay=weight_decay, dampening=dampening)
-lr_schedular = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=gamma, last_epoch=start_step)
+lr_schedular = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=gamma, last_epoch=start_step-1)
 
 # Start training
 t = Timer()
