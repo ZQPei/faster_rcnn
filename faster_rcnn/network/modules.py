@@ -36,10 +36,12 @@ class FC(nn.Module):
         return x
 
 def save_net(net, fname):
-    torch.save(net, fname)
+    torch.save(net.state_dict(), fname)
 
-def load_net(fname):
-    return torch.load(fname)
+def load_net(net, fname):
+    state_dict = torch.load(fname)
+    net.load_state_dict(state_dict)
+    return net
 
 def array_to_tensor(x, is_cuda=True, dtype=torch.float32):
     x = torch.from_numpy(x).type(dtype).data

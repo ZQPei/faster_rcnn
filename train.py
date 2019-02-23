@@ -33,8 +33,7 @@ prepare_roidb(imdb)
 data_layer = DataLayer(imdb.roidb)
 
 # network definition
-# net = FasterRCNN(imdb.num_classes)
-net = load_net(cfg.DEMO_MODEL_FILE)
+net = FasterRCNN(imdb.num_classes)
 net.train()
 if cfg.USE_CUDA:
     net.cuda()
@@ -56,7 +55,7 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 dampening = cfg.TRAIN.DAMPENING
 log_interval = cfg.TRAIN.LOG_INTERVAL
 
-# lr /= 0.01
+
 
 # Optimizer
 params = list(net.parameters())[8:]
