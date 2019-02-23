@@ -21,7 +21,7 @@ cfg.CUDA_VISIBLE_DEVICES = 0
 
 
 # Directories of project
-cfg.SPECIFIC_NAME = "vgg16_pretrained"
+cfg.SPECIFIC_NAME = "vgg16_0223"
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
