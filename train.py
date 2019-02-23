@@ -55,13 +55,20 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 dampening = cfg.TRAIN.DAMPENING
 log_interval = cfg.TRAIN.LOG_INTERVAL
 
-
-
 # Optimizer
 params = list(net.parameters())[8:]
 optimizer = torch.optim.SGD(params, lr, momentum=momentum, weight_decay=weight_decay, dampening=dampening)
 lr_schedular = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones, gamma=gamma, last_epoch=start_step-1)
 
+
+if verbose:
+    print("-"*100)
+    print("learning rate",lr)
+    print("lr decay rate", lr_decay)
+    print("start step",start_step)
+    print("end_step", end_step)
+    print("milestones", milestones)
+    print("-"*100)
 # Start training
 t = Timer()
 t.tic()
