@@ -1,5 +1,4 @@
 *.pkl
-*.jpg
 *.so
 *.o
 *.npy
