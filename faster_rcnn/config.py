@@ -45,7 +45,7 @@ cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
                 'motorbike', 'person', 'pottedplant',
                 'sheep', 'sofa', 'train', 'tvmonitor')
 
-cfg.OFFICIAL = True
+cfg.OFFICIAL = False
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
 # We use the same pixel mean for all networks even though it's not exactly what
