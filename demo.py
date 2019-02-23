@@ -25,7 +25,7 @@ net.cuda()
 t = Timer()
 
 image_files = [os.path.join(demo_image_dir,x) 
-                for x in os.listdir(demo_image_dir) if x[-4:] is '.jpg']
+                for x in os.listdir(demo_image_dir) if x[-4:] == '.jpg']
 
 import ipdb; ipdb.set_trace()
 for image_name in image_files:
