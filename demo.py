@@ -33,9 +33,10 @@ for image_name in image_files:
     im = PIL.Image.open(image_name)
     im = np.array(im)
     im_data, im_scale = preprocess(im)
+    im_imfo = np.array([*im_data.shape[:2], im_scale])
     
     t.tic()
-    bboxes, scores, cls_inds = net.detect(im_data, demo_thresh)
+    bboxes, scores, cls_inds = net.detect(im_data, , demo_thresh)
     runtime = t.toc(average=False)
 
     print('total spend: {}s'.format(runtime), dets)
