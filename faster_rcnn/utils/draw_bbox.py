@@ -3,7 +3,7 @@ import cv2
 def draw_bbox(im, bboxes, scores, cls_str, im_color_mode='RGB'):
     assert bboxes.ndim == 2
     assert bboxes.shape[0] == scores.shape[0]
-    assert bboxes.shape[0] == cls_str.shape[0]
+    assert bboxes.shape[0] == len[cls_str]
 
     if im_color_mode == 'RGB':
         im = cv2.cvtColor(im, cv2.COLOR_RGB2BGR)
