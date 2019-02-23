@@ -33,7 +33,8 @@ prepare_roidb(imdb)
 data_layer = DataLayer(imdb.roidb)
 
 # network definition
-net = FasterRCNN(imdb.num_classes)
+# net = FasterRCNN(imdb.num_classes)
+net = load_net(cfg.DEMO_MODEL_FILE)
 net.train()
 if cfg.USE_CUDA:
     net.cuda()

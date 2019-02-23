@@ -30,7 +30,7 @@ if not osp.exists(cfg.SAVE_MODEL_DIR):
 
 cfg.DEMO_IMAGE_DIR = osp.join(cfg.ROOT_DIR, 'img/demo')
 cfg.ROUND = 90000
-cfg.MODEL_NAME = 'vgg16_pretrained/faster_rcnn_{}.pkl'.format(cfg.ROUND)
+cfg.MODEL_NAME = 'voc_resnet_0218/faster_rcnn_{}.pkl'.format(cfg.ROUND)
 cfg.DEMO_MODEL_FILE = osp.join(cfg.ROOT_DIR, 'models', cfg.MODEL_NAME)
 cfg.DEMO_THRESH = 0.3
 
