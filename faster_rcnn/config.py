@@ -28,16 +28,22 @@ cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
 if not osp.exists(cfg.SAVE_MODEL_DIR):
     os.makedirs(cfg.SAVE_MODEL_DIR)
 
+cfg.DEMO_IMAGE_DIR = osp.join(cfg.ROOT_DIR, 'img/demo')
+cfg.ROUND = 90000
+cfg.MODEL_NAME = 'vgg16_pretrained/faster_rcnn_{}.pkl'.format(cfg.ROUND)
+cfg.DEMO_MODEL_FILE = osp.join(cfg.ROOT_DIR, 'models', cfg.MODEL_NAME)
+cfg.DEMO_THRESH = 0.3
+
 # Dataset
 cfg.DATASET = EasyDict()
 
 cfg.DATASET.NAME = 'Pascal_VOC'
-# cfg.DATASET.NUM_CLASSES = 20
-# cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
-#                 'bottle', 'bus', 'car', 'cat', 'chair',
-#                 'cow', 'diningtable', 'dog', 'horse',
-#                 'motorbike', 'person', 'pottedplant',
-#                 'sheep', 'sofa', 'train', 'tvmonitor')
+cfg.DATASET.NUM_CLASSES = 20
+cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
+                'bottle', 'bus', 'car', 'cat', 'chair',
+                'cow', 'diningtable', 'dog', 'horse',
+                'motorbike', 'person', 'pottedplant',
+                'sheep', 'sofa', 'train', 'tvmonitor')
 
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
@@ -98,7 +104,7 @@ cfg.TRAIN = EasyDict()
 
 # Config
 cfg.TRAIN.START_STEP = 0
-cfg.TRAIN.END_STEP = 100000
+cfg.TRAIN.END_STEP = 100001
 cfg.TRAIN.MILESTONE = [40000, 60000, 80000]
 cfg.TRAIN.OPTIMIZER = 'SGD'
 cfg.TRAIN.LEARNING_RATE = 0.001
