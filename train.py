@@ -56,6 +56,8 @@ weight_decay = cfg.TRAIN.WEIGHT_DECAY
 dampening = cfg.TRAIN.DAMPENING
 log_interval = cfg.TRAIN.LOG_INTERVAL
 
+lr /= 0.01
+
 # Optimizer
 params = list(net.parameters())[8:]
 optimizer = torch.optim.SGD(params, lr, momentum=momentum, weight_decay=weight_decay, dampening=dampening)
