@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 def draw_bbox(im, bboxes, scores, cls_str, im_color_mode='RGB'):
     assert bboxes.ndim == 2
