@@ -45,6 +45,7 @@ cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
                 'motorbike', 'person', 'pottedplant',
                 'sheep', 'sofa', 'train', 'tvmonitor')
 
+cfg.OFFICIAL = True
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
 # We use the same pixel mean for all networks even though it's not exactly what
@@ -62,7 +63,6 @@ else:
 # Network config ==============================================================================
 cfg.NETWORK = EasyDict()
 
-cfg.OFFICIAL = True
 
 # Basic Network to get feature map
 # cfg.NETWORK.BASIC_NETWORK = "vgg16"
