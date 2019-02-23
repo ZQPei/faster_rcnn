@@ -21,7 +21,7 @@ cfg.CUDA_VISIBLE_DEVICES = 0
 
 
 # Directories of project
-cfg.SPECIFIC_NAME = "vgg16_pretrained2"
+cfg.SPECIFIC_NAME = "vgg16_pretrained"
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
@@ -45,7 +45,7 @@ cfg.DATASET.CLASSES = ('aeroplane', 'bicycle', 'bird', 'boat',
                 'motorbike', 'person', 'pottedplant',
                 'sheep', 'sofa', 'train', 'tvmonitor')
 
-cfg.OFFICIAL = False
+cfg.OFFICIAL = True
 # Preprocess =================================================================================
 # Pixel mean values (BGR order) as a (1, 1, 3) array
 # We use the same pixel mean for all networks even though it's not exactly what
