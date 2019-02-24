@@ -46,6 +46,7 @@ with torch.no_grad():
         cls_str = [cfg.DATASET.CLASSES[x] for x in cls_inds]
         im2show = draw_bbox(im, bboxes, scores, cls_str, im_color_mode='RGB')
 
+        cv2.imwrite("img/demo/out_{}".format(os.path.basename(image_name)), im2show)
         cv2.imshow(image_name, im2show)
         cv2.waitKey(0)
 
