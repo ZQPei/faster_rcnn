@@ -51,7 +51,7 @@ class FasterRCNN(nn.Module):
     """Faster RCNN network
     """
 
-    def __init__(self, num_classes, is_train=False):
+    def __init__(self, num_classes=21, is_train=False):
         super(FasterRCNN, self).__init__()
         
         self.num_classes = num_classes
