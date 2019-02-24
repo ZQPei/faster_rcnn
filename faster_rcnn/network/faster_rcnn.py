@@ -146,7 +146,7 @@ class FasterRCNN(nn.Module):
             self.rcnn_cls_loss, self.rcnn_box_loss = \
                 self.build_rcnn_loss(rcnn_cls_score, rcnn_bbox_pred, labels, bbox_targets, bbox_inside_weights, bbox_outside_weights)
 
-        return rcnn_cls_prob, rcnn_bbox_pred, rois
+        return rcnn_cls_prob, rcnn_bbox_pred, rois[:,1:]
 
     def proposal_target_layer(self, rois, gt_boxes, gt_ishard):
         rois = tensor_to_array(rois, dtype=np.float32)
@@ -207,7 +207,7 @@ class FasterRCNN(nn.Module):
         keep = keep[0]
         box_deltas = rcnn_bbox_pred[keep, :]
         im_height, im_width, im_scale_ratio = im_info.data
-        boxes = rois[keep, 1:]/im_scale_ratio
+        boxes = rois[keep, :]/im_scale_ratio
 
         if cls_inds.shape[0]==0:
             return boxes, scores, cls_inds
