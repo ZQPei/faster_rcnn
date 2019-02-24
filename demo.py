@@ -18,7 +18,7 @@ demo_image_dir = cfg.DEMO_IMAGE_DIR
 demo_model_file = cfg.DEMO_MODEL_FILE
 demo_thresh = cfg.DEMO_THRESH
 
-net = load_net(demo_model_file)
+net = load_net(net, demo_model_file)
 net.eval()
 net.cuda()
 
