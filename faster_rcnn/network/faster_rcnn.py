@@ -242,7 +242,6 @@ class FasterRCNN(nn.Module):
         rcnn_cls_prob, rcnn_bbox_pred, rois = self(im_data, im_info)
         rcnn_cls_prob, rcnn_bbox_pred, rois = rcnn_cls_prob.data.cpu().numpy(), rcnn_bbox_pred.data.cpu().numpy(), rois.data.cpu().numpy()
         pred_boxes, scores, cls_inds = self.interpret_faster_rcnn(rcnn_cls_prob, rcnn_bbox_pred, rois, im_info, score_thresh)
-        pred_boxes = pred_boxes/im_info[2]
         return pred_boxes, scores, cls_inds
 
         
