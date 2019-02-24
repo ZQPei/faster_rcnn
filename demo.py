@@ -40,7 +40,7 @@ with torch.no_grad():
         bboxes, scores, cls_inds = net.detect(im_data, im_info, demo_thresh)
         runtime = t.toc(average=False)
 
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
 
         print('total spend: {}s'.format(runtime))
         cls_str = [cfg.DATASET.CLASSES[x] for x in cls_inds]
