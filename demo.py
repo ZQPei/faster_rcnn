@@ -31,10 +31,10 @@ image_files = [os.path.join(demo_image_dir,x)
 with torch.no_grad():
     for image_name in image_files:
         print(image_name)
-        im = PIL.Image.open(image_name)
-        im = np.array(im)
+        im = cv2.imread(image_name)
+        im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
         im_data, im_scale = preprocess(im)
-        im_info = np.array([*im_data.shape[:2], im_scale])
+        im_info = np.array([im_data.shape[0], im_data.shape[1], im_scale], dtype=np.float32)
         
         t.tic()
         bboxes, scores, cls_inds = net.detect(im_data, im_info, demo_thresh)
