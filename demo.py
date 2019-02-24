@@ -19,7 +19,6 @@ demo_model_file = cfg.DEMO_MODEL_FILE
 demo_thresh = cfg.DEMO_THRESH
 
 net = FasterRCNN(21)
-import ipdb; ipdb.set_trace()
 load_net(net, demo_model_file)
 net.eval()
 net.cuda()
