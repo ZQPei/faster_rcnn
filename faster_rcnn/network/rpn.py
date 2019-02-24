@@ -56,7 +56,7 @@ class RPN(nn.Module):
         rpn_bbox_pred = self.bbox_conv(x)
         
         # proposal layer to RCNN network as input
-        # import ipdb; ipdb.set_trace()
+        import ipdb; ipdb.set_trace()
         rois = self.proposal_layer(rpn_cls_prob, rpn_bbox_pred, im_info)
 
         # generating training labels and build the rpn loss
