@@ -225,6 +225,8 @@ class FasterRCNN(nn.Module):
             scores = scores[nms_keep]
             cls_inds = cls_inds[nms_keep]
 
+        cls_inds = cls_inds-1
+
         return pred_boxes, scores, cls_inds
 
     
