@@ -26,7 +26,7 @@ net.cuda()
 t = Timer()
 
 image_files = [os.path.join(demo_image_dir,x) 
-                for x in os.listdir(demo_image_dir) if x[-4:] == '.jpg']
+                for x in os.listdir(demo_image_dir) if x[-4:] == '.jpg' and x[:3] != 'out']
 
 with torch.no_grad():
     for image_name in image_files:
