@@ -207,7 +207,7 @@ class FasterRCNN(nn.Module):
         keep = keep[0]
         box_deltas = rcnn_bbox_pred[keep, :]
         im_height, im_width, im_scale_ratio = im_info.data
-        boxes = rois[keep, :]/im_scale_ratio
+        boxes = rois[keep, 1:]/im_scale_ratio
 
         if cls_inds.shape[0]==0:
             return boxes, scores, cls_inds
