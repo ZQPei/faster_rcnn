@@ -182,8 +182,8 @@ cfg.TRAIN.RPN_POSITIVE_WEIGHT = -1.0
 # During test phase =================================================================================
 cfg.TEST = EasyDict()
 
-cfg.TEST.PROB_THRESH = 0.0
-cfg.TEST.NMS_THRESH = 0.05
+cfg.TEST.PROB_THRESH = 0.05
+cfg.TEST.NMS_THRESH = 0.3
 
 # NMS config during test phase
 # NMS threshold used on RPN proposals
