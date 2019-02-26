@@ -5,14 +5,14 @@ import numpy as np
 import PIL.Image
 import cv2
 
-from faster_rcnn.data_layer.minibatch import preprocess
+from lib.data_layer.minibatch import preprocess
 
-from faster_rcnn.network.faster_rcnn import FasterRCNN
-from faster_rcnn.network.modules import load_net
+from lib.network.faster_rcnn import FasterRCNN
+from lib.network.modules import load_net
 
-from faster_rcnn.utils.timer import Timer, tic, toc
-from faster_rcnn.utils.draw_bbox import draw_bbox
-from faster_rcnn.config import cfg
+from lib.utils.timer import Timer, tic, toc
+from lib.utils.draw_bbox import draw_bbox
+from lib.config import cfg
 
 demo_image_dir = cfg.DEMO_IMAGE_DIR
 demo_model_file = cfg.DEMO_MODEL_FILE

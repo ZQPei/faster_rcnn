@@ -177,6 +177,12 @@ cfg.TRAIN.RPN_POSITIVE_WEIGHT = -1.0
 # During test phase =================================================================================
 cfg.TEST = EasyDict()
 
+cfg.TEST.OUTPUT_DIR = osp.join(cfg.ROOT_DIR, 'data/output', )
+if not osp.exists(cfg.TEST.OUTPUT_DIR):
+    os.makedirs(cfg.TEST.OUTPUT_DIR)
+cfg.TEST.PROB_THRESH = 0.0
+cfg.TEST.NMS_THRESH = 0.05
+
 # NMS config during test phase
 # NMS threshold used on RPN proposals
 cfg.TEST.RPN_NMS_THRESH = 0.7

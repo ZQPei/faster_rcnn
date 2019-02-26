@@ -2,18 +2,18 @@ import os
 
 import numpy as np
 import torch
-import torch.backends.cudnn as cudnn
+# import torch.backends.cudnn as cudnn
 
-from faster_rcnn.datasets.pascal_voc import Pascal_VOC
-from faster_rcnn.data_layer.roidb import prepare_roidb
-from faster_rcnn.data_layer.layer import DataLayer
+from lib.datasets.pascal_voc import Pascal_VOC
+from lib.data_layer.roidb import prepare_roidb
+from lib.data_layer.layer import DataLayer
 
-from faster_rcnn.network.faster_rcnn import FasterRCNN
-from faster_rcnn.network.modules import save_net, load_net, clip_gradient
+from lib.network.faster_rcnn import FasterRCNN
+from lib.network.modules import save_net, load_net, clip_gradient
 
-from faster_rcnn.utils.log_print import log_print
-from faster_rcnn.utils.timer import Timer
-from faster_rcnn.config import cfg
+from lib.utils.log_print import log_print
+from lib.utils.timer import Timer
+from lib.config import cfg
 
 rand_seed = cfg.SEED
 np.random.seed(rand_seed)
