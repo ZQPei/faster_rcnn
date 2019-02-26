@@ -105,7 +105,9 @@ for i in range(num_images):
         cls_scores = scores[inds, j]
         cls_boxes = pred_boxes[inds, j * 4:(j + 1) * 4]
         cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32, copy=False)
-        import ipdb; ipdb.set_trace()
+        if cls_dets.shape[0] == 0:
+            all_boxes[j][i] = cls_dets
+            continue
         keep = nms(cls_dets, test_nms_thresh)
         cls_dets = cls_dets[keep, :]
         if verbose:
