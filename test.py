@@ -104,7 +104,6 @@ for i in range(num_images):
         inds = np.where(scores[:, j] > test_prob_thresh)[0]
         cls_scores = scores[inds, j]
         cls_boxes = pred_boxes[inds, j * 4:(j + 1) * 4]
-        cls_scores = scores[inds]
         cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32, copy=False)
         keep = nms(cls_dets, test_nms_thresh)
         cls_dets = cls_dets[keep, :]
