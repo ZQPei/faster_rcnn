@@ -29,6 +29,7 @@ verbose = cfg.VERBOSE
 #config
 save_model_dir = cfg.SAVE_MODEL_DIR
 model_path = cfg.DEMO_MODEL_FILE
+output_dir = cfg.TEST_OUTPUT_DIR
 output_file = cfg.TEST_OUTPUT_FILE
 
 test_prob_thresh = cfg.TEST.PROB_THRESH
