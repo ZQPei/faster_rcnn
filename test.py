@@ -135,5 +135,5 @@ for i in range(num_images):
 torch.save(all_boxes, output_file)
     
 print('Evaluating detections')
-
+imdb.evaluate_detections(all_boxes, output_dir)
 
