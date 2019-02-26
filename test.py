@@ -75,7 +75,7 @@ all_boxes = [[[] for _ in range(num_images)]
                  for _ in range(num_classes)]
 
 
-for i in range(10):
+for i in range(num_images):
     im_path = imdb.image_path_at(i)
 
     im = cv2.imread(im_path)
