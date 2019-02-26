@@ -21,7 +21,7 @@ cfg.CUDA_VISIBLE_DEVICES = 0
 
 
 # Directories of project
-cfg.SPECIFIC_NAME = "vgg16_0226_without_init"
+cfg.SPECIFIC_NAME = "vgg16_0226_with_init2"
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
@@ -109,11 +109,11 @@ cfg.TRAIN = EasyDict()
 
 # Config
 cfg.TRAIN.START_STEP = 0
-cfg.TRAIN.END_STEP = 120001
-cfg.TRAIN.MILESTONE = [40000, 60000, 80000, 100000, 120000]
+cfg.TRAIN.END_STEP = 200001
+cfg.TRAIN.MILESTONE = [40000, 80000, 120000, 160000, 200000]
 cfg.TRAIN.OPTIMIZER = 'SGD'
-cfg.TRAIN.LEARNING_RATE = 0.001
-cfg.TRAIN.LEARNING_RATE_DECAY = 0.2
+cfg.TRAIN.LEARNING_RATE = 0.01
+cfg.TRAIN.LEARNING_RATE_DECAY = 0.1
 cfg.TRAIN.MOMENTUM = 0.9
 cfg.TRAIN.WEIGHT_DECAY = 5e-4
 cfg.TRAIN.DAMPENING = 0
@@ -144,7 +144,7 @@ cfg.TRAIN.FG_THRESH = 0.5
 cfg.TRAIN.BG_THRESH_HI = 0.5
 cfg.TRAIN.BG_THRESH_LO = 0.0
 
-cfg.TRAIN.BBOX_INSIDE_WEIGHTS = (1.0, 1.0, 1.0, 1.0)
+cfg.TRAIN.BBOX_INSIDE_WEIGHTS = [1.0, 1.0, 1.0, 1.0]
 # Normalize the targets using "precomputed" (or made up) means and stdevs
 # (BBOX_NORMALIZE_TARGETS must also be True)
 cfg.TRAIN.BBOX_NORMALIZE_TARGETS_PRECOMPUTED = False
