@@ -74,8 +74,6 @@ all_boxes = [[[] for _ in range(num_images)]
                  for _ in range(num_classes)]
 
 
-if verbose:
-    tp, tf, fg, bg = 0., 0., 0, 0
 for i in range(num_images):
     im_path = imdb.image_path_at(i)
 
@@ -125,9 +123,9 @@ for i in range(num_images):
                 all_boxes[j][i] = all_boxes[j][i][keep, :]
     nms_time = t.toc(average=False)
 
-    if verbose:
-        cv2.imshow("test", im2show)
-        cv2.waitKey(0)
+    # if verbose:
+    #     cv2.imshow("test", im2show)
+    #     cv2.waitKey(1)
     
     print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_images, os.path.basename(im_path), detect_time, nms_time))
 
