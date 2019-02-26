@@ -52,7 +52,8 @@ net.eval()
 if cfg.USE_CUDA:
     net.cuda()
 if verbose:
-    print(net)
+    # print(net)
+    pass
 
 load_net(net, model_path)
 
