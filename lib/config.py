@@ -21,7 +21,7 @@ cfg.CUDA_VISIBLE_DEVICES = 0
 
 
 # Directories of project
-cfg.SPECIFIC_NAME = "vgg16_0223_with_init"
+cfg.SPECIFIC_NAME = "vgg16_0226_without_init"
 cfg.ROOT_DIR = osp.abspath(osp.join(osp.dirname(__file__), '..'))
 cfg.DATA_DIR = osp.join(cfg.ROOT_DIR, 'data')
 cfg.SAVE_MODEL_DIR = osp.join(cfg.ROOT_DIR, 'models', cfg.SPECIFIC_NAME)
@@ -109,11 +109,11 @@ cfg.TRAIN = EasyDict()
 
 # Config
 cfg.TRAIN.START_STEP = 0
-cfg.TRAIN.END_STEP = 100001
-cfg.TRAIN.MILESTONE = [40000, 60000, 80000]
+cfg.TRAIN.END_STEP = 120001
+cfg.TRAIN.MILESTONE = [40000, 60000, 80000, 100000, 120000]
 cfg.TRAIN.OPTIMIZER = 'SGD'
 cfg.TRAIN.LEARNING_RATE = 0.001
-cfg.TRAIN.LEARNING_RATE_DECAY = 0.1
+cfg.TRAIN.LEARNING_RATE_DECAY = 0.2
 cfg.TRAIN.MOMENTUM = 0.9
 cfg.TRAIN.WEIGHT_DECAY = 5e-4
 cfg.TRAIN.DAMPENING = 0

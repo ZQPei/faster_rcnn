@@ -55,7 +55,7 @@ class FasterRCNN(nn.Module):
         super(FasterRCNN, self).__init__()
         
         self.num_classes = num_classes
-        mean = cfg.MEAN[::-1]
+        mean = cfg.MEAN
         std  = cfg.STD
         self._normalize = transforms.Normalize(mean, std)
 
