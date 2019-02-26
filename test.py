@@ -83,6 +83,7 @@ for i in range(num_images):
     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im_data, im_scale = preprocess(im)
     im_info = np.array([im_data.shape[0], im_data.shape[1], im_scale], dtype=np.float32)
+    im2show = im
 
     # forward
     t.tic()
@@ -96,7 +97,6 @@ for i in range(num_images):
     pred_boxes = clip_boxes(pred_boxes, im_data.shape[1], im_data.shape[0])
     detect_time = t.toc(average=False)
 
-    import ipdb; ipdb.set_trace()
     # nms
     t.tic()
     # skip j = 0, because it's the background class
@@ -109,7 +109,7 @@ for i in range(num_images):
         cls_dets = cls_dets[keep, :]
         if verbose:
             cls_str = [cfg.DATASET.CLASSES[j-1]]*cls_dets.shape[0]
-            im2show = draw_bbox(im, pred_boxes, cls_dets, cls_str)
+            im2show = draw_bbox(im2show, pred_boxes, cls_dets, cls_str)
         all_boxes[j][i] = cls_dets
 
     # Limit to max_per_image detections *over all classes*
