@@ -16,7 +16,7 @@ from lib.network.proposals.bbox_transform import bbox_transform_inv, clip_boxes
 from lib.network.nms import nms
 
 from lib.utils.log_print import log_print
-from lib.utils.
+from lib.utils.draw_bbox import draw_bbox
 from lib.utils.timer import Timer
 from lib.config import cfg
 
@@ -30,7 +30,7 @@ verbose = cfg.VERBOSE
 #config
 save_model_dir = cfg.SAVE_MODEL_DIR
 model_path = cfg.DEMO_MODEL_FILE
-output_dir = cfg.TEST.OUTPUT_DIR
+output_file = cfg.TEST_OUTPUT_FILE
 
 test_prob_thresh = cfg.TEST.PROB_THRESH
 test_nms_thresh = cfg.TEST.NMS_THRESH
@@ -119,11 +119,17 @@ for i in range(num_images):
                 keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
                 all_boxes[j][i] = all_boxes[j][i][keep, :]
     nms_time = t.toc(average=False)
+
+    if verbose:
+        cls_str = [cfg.DATASET.CLASSES[x+1] for x in scores.argmax(axis=1)]
+        im2show = draw_bbox(im, pred_boxes, scores, cls_str)
+        cv2.imshow("test", im2show)
+        cv2.waitKey(1)
     
     print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_classes, os.path.basename(im_path), detect_time, nms_time))
 
 
-with open(det_file, 'wb') as f:
+with open(output_file, 'wb') as f:
     pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
     
 

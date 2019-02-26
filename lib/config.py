@@ -34,6 +34,11 @@ cfg.MODEL_NAME = 'vgg16_0223_without_init/faster_rcnn_{}.pkl'.format(cfg.ROUND)
 cfg.DEMO_MODEL_FILE = osp.join(cfg.ROOT_DIR, 'models', cfg.MODEL_NAME)
 cfg.DEMO_THRESH = 0.3
 
+cfg.TEST_OUTPUT_DIR = osp.join(cfg.ROOT_DIR, 'data/output', 'vgg16_0223_without_init')
+if not osp.exists(cfg.TEST_OUTPUT_DIR):
+    os.makedirs(cfg.TEST_OUTPUT_DIR)
+cfg.TEST_OUTPUT_FILE = osp.join(cfg.TEST_OUTPUT_DIR, "detections.pkl")
+
 # Dataset
 cfg.DATASET = EasyDict()
 
@@ -177,9 +182,6 @@ cfg.TRAIN.RPN_POSITIVE_WEIGHT = -1.0
 # During test phase =================================================================================
 cfg.TEST = EasyDict()
 
-cfg.TEST.OUTPUT_DIR = osp.join(cfg.ROOT_DIR, 'data/output', )
-if not osp.exists(cfg.TEST.OUTPUT_DIR):
-    os.makedirs(cfg.TEST.OUTPUT_DIR)
 cfg.TEST.PROB_THRESH = 0.0
 cfg.TEST.NMS_THRESH = 0.05
 
