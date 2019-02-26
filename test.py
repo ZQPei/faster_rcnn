@@ -107,6 +107,9 @@ for i in range(num_images):
         cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32, copy=False)
         keep = nms(cls_dets, test_nms_thresh)
         cls_dets = cls_dets[keep, :]
+        if verbose:
+            cls_str = [cfg.DATASET.CLASSES[j-1]]*cls_dets.shape[0]
+            im2show = draw_bbox(im, pred_boxes, cls_dets, cls_str)
         all_boxes[j][i] = cls_dets
 
     # Limit to max_per_image detections *over all classes*
@@ -120,8 +123,6 @@ for i in range(num_images):
     nms_time = t.toc(average=False)
 
     if verbose:
-        cls_str = [cfg.DATASET.CLASSES[x-1] for x in scores.argmax(axis=1)]
-        im2show = draw_bbox(im, pred_boxes, scores.max(axis=1), cls_str)
         cv2.imshow("test", im2show)
         cv2.waitKey(1)
     
