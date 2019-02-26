@@ -83,6 +83,7 @@ for i in range(num_images):
     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im_data, im_scale = preprocess(im)
     im_info = np.array([im_data.shape[0], im_data.shape[1], im_scale], dtype=np.float32)
+    im2show = im
 
     # forward
     t.tic()
