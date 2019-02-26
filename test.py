@@ -96,7 +96,7 @@ for i in range(num_images):
     pred_boxes = clip_boxes(pred_boxes, im_data.shape[1], im_data.shape[0])
     detect_time = t.toc(average=False)
 
-
+    import ipdb; ipdb.set_trace()
     # nms
     t.tic()
     # skip j = 0, because it's the background class
