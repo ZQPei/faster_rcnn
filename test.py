@@ -1,5 +1,4 @@
 import os
-
 import cv2
 
 import numpy as np
@@ -129,8 +128,7 @@ for i in range(num_images):
     print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_classes, os.path.basename(im_path), detect_time, nms_time))
 
 
-with open(output_file, 'wb') as f:
-    pickle.dump(all_boxes, f, pickle.HIGHEST_PROTOCOL)
+torch.save(all_boxes, output_file)
     
 
 
