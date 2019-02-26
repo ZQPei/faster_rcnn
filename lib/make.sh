@@ -13,9 +13,7 @@ nvcc -c -o roi_pooling.cu.o roi_pooling_kernel.cu \
 # g++ -std=c++11 -shared -o roi_pooling.so roi_pooling_op.cc \ 
 # 	roi_pooling_op.cu.o -I $TF_INC -fPIC -lcudart -L $CUDA_PATH/lib64
 cd ../../
-cp ../../../../utils/ffi.py .
-
+cp ../../utils/ffi.py .
 python build.py
 
-cd ../../
 cp ../../utils/ffi.py _ext/roi_pooling
