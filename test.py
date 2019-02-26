@@ -129,10 +129,11 @@ for i in range(num_images):
         cv2.imshow("test", im2show)
         cv2.waitKey(0)
     
-    print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_classes, os.path.basename(im_path), detect_time, nms_time))
+    print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_images, os.path.basename(im_path), detect_time, nms_time))
 
 
 torch.save(all_boxes, output_file)
     
+print('Evaluating detections')
 
 
