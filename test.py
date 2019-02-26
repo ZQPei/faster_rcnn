@@ -120,7 +120,7 @@ for i in range(num_images):
     nms_time = t.toc(average=False)
 
     if verbose:
-        cls_str = [cfg.DATASET.CLASSES[x+1] for x in scores.argmax(axis=1)]
+        cls_str = [cfg.DATASET.CLASSES[x-1] for x in scores.argmax(axis=1)]
         im2show = draw_bbox(im, pred_boxes, scores.max(axis=1), cls_str)
         cv2.imshow("test", im2show)
         cv2.waitKey(1)
