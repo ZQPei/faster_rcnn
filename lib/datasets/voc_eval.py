@@ -101,7 +101,6 @@ def voc_eval(detpath,
     if not os.path.isdir(cachedir):
         os.mkdir(cachedir)
     cachefile = os.path.join(cachedir, 'annots.pkl')
-    import ipdb; ipdb.set_trace()
     # read list of images
     with open(imagesetfile, 'r') as f:
         lines = f.readlines()
@@ -117,6 +116,7 @@ def voc_eval(detpath,
                     i + 1, len(imagenames)))
         # save
         print('Saving cached annotations to {:s}'.format(cachefile))
+        import ipdb; ipdb.set_trace()
         with open(cachefile, 'w') as f:
             pickle.dump(recs, f)
     else:
