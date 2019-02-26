@@ -109,6 +109,7 @@ for i in range(num_images):
         cls_dets = cls_dets[keep, :]
         if verbose:
             cls_str = [cfg.DATASET.CLASSES[j-1]]*cls_dets.shape[0]
+            import ipdb; ipdb.set_trace()
             im2show = draw_bbox(im2show, cls_dets, cls_scores, cls_str)
         all_boxes[j][i] = cls_dets
 
