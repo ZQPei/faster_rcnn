@@ -83,7 +83,7 @@ for i in range(num_images):
     im = cv2.cvtColor(im, cv2.COLOR_BGR2RGB)
     im_data, im_scale = preprocess(im)
     im_info = np.array([im_data.shape[0], im_data.shape[1], im_scale], dtype=np.float32)
-    im2show = im
+    im2show = im[:,:,::-1]
 
     # forward
     t.tic()
@@ -127,7 +127,7 @@ for i in range(num_images):
 
     if verbose:
         cv2.imshow("test", im2show)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
     
     print('process: {:d}/{:d} image: {} detect: {:.3f}s nms: {:.3f}s'.format( i+1, num_classes, os.path.basename(im_path), detect_time, nms_time))
 
