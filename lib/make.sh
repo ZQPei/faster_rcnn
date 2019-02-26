@@ -10,10 +10,12 @@ echo "Compiling roi pooling kernels by nvcc..."
 nvcc -c -o roi_pooling.cu.o roi_pooling_kernel.cu \
 	 -D GOOGLE_CUDA=1 -x cu -Xcompiler -fPIC -arch=sm_61
 
-g++ -std=c++11 -shared -o roi_pooling.so roi_pooling_op.cc \ 
-	roi_pooling_op.cu.o -I $TF_INC -fPIC -lcudart -L $CUDA_PATH/lib64
-# cd ../../
-# python build.py
+# g++ -std=c++11 -shared -o roi_pooling.so roi_pooling_op.cc \ 
+# 	roi_pooling_op.cu.o -I $TF_INC -fPIC -lcudart -L $CUDA_PATH/lib64
+cd ../../
+cp ../../../../utils/ffi.py .
+
+python build.py
 
 cd ../../
 cp ../../utils/ffi.py _ext/roi_pooling
