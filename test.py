@@ -103,7 +103,7 @@ for i in range(num_images):
     for j in range(1, num_classes):
         inds = np.where(scores[:, j] > test_prob_thresh)[0]
         cls_scores = scores[inds, j]
-        cls_boxes = boxes[inds, j * 4:(j + 1) * 4]
+        cls_boxes = pred_boxes[inds, j * 4:(j + 1) * 4]
         cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])).astype(np.float32, copy=False)
         import ipdb; ipdb.set_trace()
         keep = nms(cls_dets, test_nms_thresh)
