@@ -30,11 +30,11 @@ if not osp.exists(cfg.SAVE_MODEL_DIR):
 
 cfg.DEMO_IMAGE_DIR = osp.join(cfg.ROOT_DIR, 'img/demo')
 cfg.ROUND = 100000
-cfg.MODEL_NAME = 'vgg16_0223_without_init/faster_rcnn_{}.pkl'.format(cfg.ROUND)
+cfg.MODEL_NAME = 'vgg16_0226_without_bbox_normalize/faster_rcnn_{}.pkl'.format(cfg.ROUND)
 cfg.DEMO_MODEL_FILE = osp.join(cfg.ROOT_DIR, 'models', cfg.MODEL_NAME)
 cfg.DEMO_THRESH = 0.3
 
-cfg.TEST_OUTPUT_DIR = osp.join(cfg.ROOT_DIR, 'data/output', 'vgg16_0223_without_init')
+cfg.TEST_OUTPUT_DIR = osp.join(cfg.ROOT_DIR, 'data/output', 'vgg16_0226_without_bbox_normalize')
 if not osp.exists(cfg.TEST_OUTPUT_DIR):
     os.makedirs(cfg.TEST_OUTPUT_DIR)
 cfg.TEST_OUTPUT_FILE = osp.join(cfg.TEST_OUTPUT_DIR, "detections.pkl")
