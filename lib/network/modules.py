@@ -79,7 +79,7 @@ def weights_normal_init_kaiming(model, devilation=0.01):
     """init the conv and bn and fc layers weights by standard devilation"""
     if isinstance(model, list):
         for m in model:
-            weights_normal_init(m, devilation)
+            weights_normal_init_kaiming(m, devilation)
     else:
         for m in model.modules():
             if isinstance(m, nn.Conv2d):
